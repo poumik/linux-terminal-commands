@@ -1,8 +1,10 @@
 Here’s my curated list of 200 most useful Linux terminal commands**—grouped by category for clarity, but numbered continuously. These are the heavy hitters I use daily as a sysadmin/developer.
 
+# The Linux Terminal Reference
+
 ---
 
-### File & Directory Management (Navigation, CRUD, Links)
+##  File & Directory Management
 
 | # | Command | Description |
 |---|---------|-------------|
@@ -10,8 +12,8 @@ Here’s my curated list of 200 most useful Linux terminal commands**—grouped 
 | 2 | `cd` | Change directory (`cd ~` goes home). |
 | 3 | `pwd` | Print current working directory. |
 | 4 | `mkdir` | Create a new directory (`-p` for parent paths). |
-| 5 | `rmdir` | Remove an **empty** directory. |
-| 6 | `rm` | Remove files or directories (`-rf` with extreme caution). |
+| 5 | `rmdir` | Remove an empty directory. |
+| 6 | `rm` | Remove files or directories (`-rf` with extreme caution — see note below). |
 | 7 | `cp` | Copy files/directories (`-r` for recursive). |
 | 8 | `mv` | Move or rename files/directories. |
 | 9 | `touch` | Create an empty file or update its timestamp. |
@@ -22,9 +24,7 @@ Here’s my curated list of 200 most useful Linux terminal commands**—grouped 
 | 14 | `whereis` | Locate binary, source, and manual pages for a command. |
 | 15 | `tree` | Display directory structure in a tree-like format. |
 
----
-
-### Viewing Files (Pagers & Editors)
+##  Viewing Files (Pagers & Editors)
 
 | # | Command | Description |
 |---|---------|-------------|
@@ -32,13 +32,11 @@ Here’s my curated list of 200 most useful Linux terminal commands**—grouped 
 | 17 | `less` | Scrollable file viewer (supports search, `/pattern`). |
 | 18 | `more` | Older pager; `less` is usually better. |
 | 19 | `head` | Show first N lines of a file (default 10). |
-| 20 | `tail` | Show last N lines (use `-f` to follow live logs). |
+| 20 | `tail` | Show last N lines (`-f` to follow live logs). |
 | 21 | `nano` | Simple, beginner-friendly terminal text editor. |
-| 22 | `vim` | Powerful modal text editor (install `vim` if not present). |
+| 22 | `vim` | Powerful modal text editor. |
 
----
-
-### Text Processing (Search, Filter, Transform)
+##  Text Processing
 
 | # | Command | Description |
 |---|---------|-------------|
@@ -49,293 +47,403 @@ Here’s my curated list of 200 most useful Linux terminal commands**—grouped 
 | 27 | `sort` | Sort lines alphabetically/numerically. |
 | 28 | `uniq` | Report or omit repeated lines (usually used after `sort`). |
 | 29 | `wc` | Count lines, words, and characters (`-l` for just lines). |
-| 30 | `tr` | Translate or delete characters (e.g., lower→upper). |
+| 30 | `tr` | Translate or delete characters. |
 | 31 | `diff` | Show line-by-line differences between two files. |
 | 32 | `patch` | Apply a diff file to update source code/text. |
 | 33 | `tee` | Read from stdin and write to both stdout and a file. |
-| 34 | `xargs` | Build and execute commands from stdin (passes output as arguments). |
+| 34 | `xargs` | Build and execute commands from stdin. `-P` runs them in parallel. |
+| 35 | `column` | Pretty-print tabular text into aligned columns (`column -t`). |
 
----
-
-### Permissions & Ownership
-
-| # | Command | Description |
-|---|---------|-------------|
-| 35 | `chmod` | Change file permissions (e.g., `chmod +x script.sh`). |
-| 36 | `chown` | Change file owner and group. |
-| 37 | `chgrp` | Change group ownership only. |
-| 38 | `umask` | Set default permission mask for new files/dirs. |
-| 39 | `sudo` | Execute a command as another user (usually root). |
-| 40 | `su` | Switch user (or become root with `su -`). |
-
----
-
-### Process & System Monitoring
+##  Permissions & Ownership
 
 | # | Command | Description |
 |---|---------|-------------|
-| 41 | `ps` | Snapshot of current processes (`aux` for all users). |
-| 42 | `top` | Real‑time process viewer (CPU/memory). |
-| 43 | `htop` | Improved interactive process monitor (install separately). |
-| 44 | `kill` | Send signals to a process by PID (`-9` to force kill). |
-| 45 | `killall` | Kill all processes by name. |
-| 46 | `jobs` | List active background jobs in the current shell. |
-| 47 | `bg` | Resume a suspended job in the background. |
-| 48 | `fg` | Bring a background job to the foreground. |
-| 49 | `nohup` | Run a command immune to hangups (keeps running after logout). |
-| 50 | `uptime` | Show how long the system has been running + load average. |
-| 51 | `free` | Display memory usage (`-h` for human‑readable). |
-| 52 | `df` | Show disk space usage of all mounted filesystems (`-h`). |
-| 53 | `du` | Estimate file/directory space usage (`-sh` for summary). |
-| 54 | `dmesg` | Print kernel ring buffer (boot messages & hardware logs). |
-| 55 | `uname` | System info (`-a` for all details). |
-| 56 | `hostname` | Show or set the system’s hostname. |
-| 57 | `date` | Display or set the system date/time. |
-| 58 | `cal` | Show a calendar in the terminal. |
-| 59 | `who` | Show who is currently logged in. |
-| 60 | `w` | Show who is logged in and what they are doing. |
-| 61 | `last` | Show login history (reads `/var/log/wtmp`). |
-| 62 | `id` | Print user and group IDs for the current user. |
+| 36 | `chmod` | Change file permissions (e.g., `chmod +x script.sh`). |
+| 37 | `chown` | Change file owner and group. |
+| 38 | `chgrp` | Change group ownership only. |
+| 39 | `umask` | Set default permission mask for new files/dirs. |
+| 40 | `sudo` | Execute a command as another user (usually root). |
+| 41 | `su` | Switch user (or become root with `su -`). |
 
----
-
-### Networking
+##  Process & System Monitoring
 
 | # | Command | Description |
 |---|---------|-------------|
-| 63 | `ping` | Test network connectivity to a host (ICMP). |
-| 64 | `traceroute` | Trace the route packets take to a destination. |
-| 65 | `ss` | Socket statistics – modern replacement for `netstat` (e.g., `ss -tuln`). |
-| 66 | `ip` | Show/manage network interfaces, routes, and tunnels (`ip a`). |
-| 67 | `ifconfig` | Older interface config tool (still common, but `ip` is preferred). |
-| 68 | `curl` | Transfer data from/to a server (supports HTTP, FTP, etc.). |
-| 69 | `wget` | Non‑interactive network downloader (great for recursive mirrors). |
-| 70 | `scp` | Securely copy files over SSH. |
-| 71 | `rsync` | Fast, incremental file sync over SSH or locally. |
-| 72 | `ssh` | Secure Shell – remote login and command execution. |
-| 73 | `nc` (netcat) | Networking Swiss‑army knife – read/write TCP/UDP, port scanning. |
+| 42 | `ps` | Snapshot of current processes (`aux` for all users). |
+| 43 | `top` | Real-time process viewer (CPU/memory). |
+| 44 | `htop` | Improved interactive process monitor. |
+| 45 | `btop` | Newer, prettier alternative to htop/top with graphs built in. |
+| 46 | `kill` | Send signals to a process by PID (`-9` to force kill). |
+| 47 | `killall` | Kill all processes by name. |
+| 48 | `jobs` | List active background jobs in the current shell. |
+| 49 | `bg` | Resume a suspended job in the background. |
+| 50 | `fg` | Bring a background job to the foreground. |
+| 51 | `nohup` | Run a command immune to hangups (keeps running after logout). |
+| 52 | `timeout` | Run a command but kill it if it exceeds a time limit. |
+| 53 | `uptime` | Show how long the system has been running + load average. |
+| 54 | `free` | Display memory usage (`-h` for human-readable). |
+| 55 | `df` | Show disk space usage of all mounted filesystems (`-h`). |
+| 56 | `du` | Estimate file/directory space usage (`-sh` for summary). |
+| 57 | `dmesg` | Print kernel ring buffer (boot messages & hardware logs). |
+| 58 | `uname` | System info (`-a` for all details). |
+| 59 | `hostname` | Show or set the system's hostname. |
+| 60 | `date` | Display or set the system date/time. |
+| 61 | `cal` | Show a calendar in the terminal. |
+| 62 | `who` | Show who is currently logged in. |
+| 63 | `w` | Show who is logged in and what they are doing. |
+| 64 | `last` | Show login history (reads `/var/log/wtmp`). |
+| 65 | `id` | Print user and group IDs for the current user. |
 
----
-
-### Archiving & Compression
-
-| # | Command | Description |
-|---|---------|-------------|
-| 74 | `tar` | Tape archiver – create/extract `.tar` files (`-czvf` for gzip). |
-| 75 | `gzip` | Compress/decompress files (GNU zip). |
-| 76 | `zip` | Package and compress in Windows‑compatible `.zip` format. |
-| 77 | `unzip` | Extract `.zip` archives. |
-| 78 | `bzip2` | Higher‑compression block‑sorting compressor. |
-| 79 | `xz` | Very high compression ratio (`.xz` format). |
-
----
-
-### Package Management (distro‑specific)
+##  Networking
 
 | # | Command | Description |
 |---|---------|-------------|
-| 80 | `apt` | Debian/Ubuntu package manager (install, update, upgrade). |
-| 81 | `dnf` | RHEL/Fedora next‑gen package manager (replaces `yum`). |
-| 82 | `pacman` | Arch Linux package manager. |
-| 83 | `shutdown` | Power off or reboot the system (`-h now`, `-r now`). |
+| 66 | `ping` | Test network connectivity to a host (ICMP). |
+| 67 | `traceroute` | Trace the route packets take to a destination. |
+| 68 | `ss` | Socket statistics – modern replacement for `netstat` (e.g. `ss -tuln`). |
+| 69 | `ip` | Show/manage network interfaces, routes, and tunnels (`ip a`). |
+| 70 | `ifconfig` | Older interface config tool; `ip` is preferred now. |
+| 71 | `curl` | Transfer data from/to a server (HTTP, FTP, etc.). |
+| 72 | `wget` | Non-interactive network downloader (recursive mirrors). |
+| 73 | `scp` | Securely copy files over SSH. |
+| 74 | `rsync` | Fast, incremental file sync over SSH or locally. |
+| 75 | `ssh` | Secure Shell – remote login and command execution. |
+| 76 | `nc` (netcat) | Networking Swiss-army knife – read/write TCP/UDP, port scanning. |
+| 77 | `openssl` | Certificates, hashing, quick encryption/decryption from the CLI. |
 
----
-
-### Shell Utilities & Shortcuts
-
-| # | Command | Description |
-|---|---------|-------------|
-| 84 | `clear` | Clear the terminal screen. |
-| 85 | `history` | Show command history (repeat with `!123`). |
-| 86 | `alias` | Create command shortcuts (e.g., `alias ll='ls -la'`). |
-| 87 | `export` | Set environment variables. |
-| 88 | `echo` | Display a line of text or variable value. |
-| 89 | `man` | Display the manual page for any command. |
-| 90 | `whatis` | Show a one‑line summary of a command’s purpose. |
-| 91 | `type` | Describe how a command would be interpreted (builtin, alias, binary). |
-| 92 | `time` | Measure the execution time of a command. |
-| 93 | `sleep` | Pause for a specified number of seconds. |
-| 94 | `readlink` | Print the value of a symbolic link (or canonical path with `-f`). |
-| 95 | `dirname` | Strip the last component from a file path (get the directory). |
-| 96 | `basename` | Strip the directory path and get the filename. |
-| 97 | `printf` | Format and print data (more powerful than `echo`). |
-| 98 | `yes` | Repeatedly output a line (useful for piping to confirm prompts). |
-| 99 | `watch` | Run a command repeatedly and show output every 2 seconds (e.g., `watch -n1 free`). |
-| 100 | `tmux` | Terminal multiplexer – keep sessions alive, split panes, detach/reattach. |
-
----
-
-### Advanced Disk, Filesystem & Block Operations
+##  Archiving & Compression
 
 | # | Command | Description |
 |---|---------|-------------|
-| 101 | `dd` | Low‑level copy/conversion (e.g., `dd if=/dev/sda of=backup.img bs=4M`). |
-| 102 | `sync` | Flush filesystem buffers to disk (force writes). |
-| 103 | `mount` | Attach a filesystem to the directory tree (`-t` for type). |
-| 104 | `umount` | Detach a mounted filesystem. |
-| 105 | `fdisk` | Partition table manipulator (interactive, MBR/GPT). |
-| 106 | `mkfs` | Build a filesystem on a partition (e.g., `mkfs.ext4 /dev/sdb1`). |
-| 107 | `lsblk` | List block devices in a tree format (with sizes and mount points). |
-| 108 | `blkid` | Locate/print block device attributes (UUID, filesystem type). |
-| 109 | `e2fsck` | Check/repair an ext2/ext3/ext4 filesystem (run on unmounted). |
-| 110 | `tune2fs` | Adjust tunable ext2/3/4 filesystem parameters (e.g., reserved blocks). |
+| 78 | `tar` | Create/extract `.tar` archives (`-czvf` for gzip). |
+| 79 | `gzip` | Compress/decompress files (GNU zip). |
+| 80 | `zip` | Package and compress in Windows-compatible `.zip` format. |
+| 81 | `unzip` | Extract `.zip` archives. |
+| 82 | `bzip2` | Higher-compression block-sorting compressor. |
+| 83 | `xz` | Very high compression ratio (`.xz` format). |
 
----
-
-### Niche Text & Data Transformation
+##  Package Management (distro-specific)
 
 | # | Command | Description |
 |---|---------|-------------|
-| 111 | `tac` | Reverse `cat` – print file lines in reverse order. |
-| 112 | `rev` | Reverse each character in every line. |
-| 113 | `paste` | Merge lines of multiple files side‑by‑side (column‑wise). |
-| 114 | `join` | Join lines of two sorted files on a common field (like SQL join). |
-| 115 | `comm` | Compare two sorted files line‑by‑line (shows unique/common). |
-| 116 | `nl` | Number lines of a file (like `cat -n` but with more formatting). |
-| 117 | `fold` | Wrap input lines to fit a specified width (e.g., `fold -w 80`). |
-| 118 | `expand` | Convert tabs to spaces. |
-| 119 | `unexpand` | Convert spaces to tabs (opposite of `expand`). |
-| 120 | `seq` | Generate a sequence of numbers (`seq 1 10`). |
+| 84 | `apt` | Debian/Ubuntu package manager. |
+| 85 | `dnf` | RHEL/Fedora next-gen package manager (replaces `yum`). |
+| 86 | `pacman` | Arch Linux package manager. |
+| 87 | `shutdown` | Power off or reboot the system (`-h now`, `-r now`). |
 
----
-
-### Process Performance & Low‑Level Inspection
+##  Shell Utilities & Shortcuts
 
 | # | Command | Description |
 |---|---------|-------------|
-| 121 | `lsof` | List **open files** (sockets, pipes, logs) – great for `lsof -i :80`. |
-| 122 | `fuser` | Identify processes using a file/socket (`fuser -v /var/log/syslog`). |
-| 123 | `iotop` | Real‑time disk I/O usage per process (requires root). |
-| 124 | `iostat` | Report CPU and disk I/O statistics (from `sysstat` package). |
-| 125 | `vmstat` | Virtual memory stats – processes, memory, paging, CPU. |
-| 126 | `sar` | Collect, report, and save system activity data (powerful historical tool). |
-| 127 | `pidof` | Find the PID of a running process by name (`pidof nginx`). |
-| 128 | `nice` | Run a process with a modified scheduling priority (lower niceness = higher). |
-| 129 | `renice` | Change the priority of an already‑running process. |
-| 130 | `strace` | Trace system calls and signals – debug like a pro. |
+| 88 | `clear` | Clear the terminal screen. |
+| 89 | `history` | Show command history (repeat with `!123`). |
+| 90 | `alias` | Create command shortcuts (e.g. `alias ll='ls -la'`). |
+| 91 | `export` | Set environment variables. |
+| 92 | `echo` | Display a line of text or variable value. |
+| 93 | `man` | Display the manual page for any command. |
+| 94 | `whatis` | Show a one-line summary of a command's purpose. |
+| 95 | `type` | Describe how a command would be interpreted. |
+| 96 | `time` | Measure the execution time of a command. |
+| 97 | `sleep` | Pause for a specified number of seconds. |
+| 98 | `readlink` | Print the value of a symbolic link (`-f` for canonical path). |
+| 99 | `dirname` | Strip the last component from a file path. |
+| 100 | `basename` | Strip the directory path and get the filename. |
+| 101 | `printf` | Format and print data (more powerful than `echo`). |
+| 102 | `yes` | Repeatedly output a line (pipe into confirm prompts). |
+| 103 | `watch` | Run a command repeatedly, refreshing output (e.g. `watch -n1 free`). |
+| 104 | `tmux` | Terminal multiplexer – keep sessions alive, split panes, detach/reattach. |
+| 105 | `entr` | Rerun a command whenever watched files change — great for dev loops. |
 
----
-
-### Hardware & Kernel Deep Dive
-
-| # | Command | Description |
-|---|---------|-------------|
-| 131 | `lscpu` | Display CPU architecture info (cores, threads, model). |
-| 132 | `lsmem` | List memory regions and their availability (NUMA aware). |
-| 133 | `lspci` | Show all PCI devices (graphics, NICs, storage). |
-| 134 | `lsusb` | List USB devices (tree view with `-t`). |
-| 135 | `dmidecode` | Dump DMI/SMBIOS data – hardware serials, BIOS versions. |
-| 136 | `inxi` | All‑in‑one system info script (great for support forums). |
-| 137 | `neofetch` | Display system info in a pretty, distribution‑logo format. |
-| 138 | `lsmod` | Show currently loaded kernel modules. |
-| 139 | `modprobe` | Add or remove kernel modules (with dependency handling). |
-| 140 | `rmmod` | Remove a kernel module (force with `-f`). |
-
----
-
-### Advanced Networking (DNS, scanning, routing)
+##  Advanced Disk, Filesystem & Block Operations
 
 | # | Command | Description |
 |---|---------|-------------|
-| 141 | `dig` | DNS lookup utility – get A, MX, NS records with full details. |
-| 142 | `nslookup` | Query DNS servers interactively or for a single host. |
-| 143 | `host` | Simple DNS lookup (good for quick IP ↔ name resolution). |
-| 144 | `nmap` | Network discovery and port scanning (`nmap -sP 192.168.1.0/24`). |
-| 145 | `telnet` | Connect to remote hosts over TCP (used to test raw ports). |
-| 146 | `mtr` | My TraceRoute – combines `ping` and `traceroute` in real‑time. |
-| 147 | `iftop` | Real‑time network bandwidth usage per connection (like `top` for net). |
-| 148 | `nethogs` | Show bandwidth usage per process (not just per interface). |
-| 149 | `arp` | View/manage the ARP table (IP ↔ MAC address mapping). |
-| 150 | `route` | Show or modify the IP routing table (deprecated, use `ip route`). |
+| 106 | `dd` | Low-level copy/conversion (e.g. `dd if=/dev/sda of=backup.img bs=4M`). |
+| 107 | `sync` | Flush filesystem buffers to disk. |
+| 108 | `mount` | Attach a filesystem to the directory tree. |
+| 109 | `umount` | Detach a mounted filesystem. |
+| 110 | `fdisk` | Partition table manipulator (interactive, MBR/GPT). |
+| 111 | `mkfs` | Build a filesystem on a partition. |
+| 112 | `lsblk` | List block devices in a tree format. |
+| 113 | `blkid` | Locate/print block device attributes (UUID, filesystem type). |
+| 114 | `e2fsck` | Check/repair an ext2/3/4 filesystem. |
+| 115 | `tune2fs` | Adjust tunable ext2/3/4 filesystem parameters. |
 
----
-
-### User & Group Administration
+##  Niche Text & Data Transformation
 
 | # | Command | Description |
 |---|---------|-------------|
-| 151 | `useradd` | Create a new user account (`-m` for home dir). |
-| 152 | `usermod` | Modify an existing user (groups, home, shell). |
-| 153 | `userdel` | Delete a user account (`-r` removes home/mail). |
-| 154 | `groupadd` | Create a new group. |
-| 155 | `groupdel` | Delete a group. |
-| 156 | `passwd` | Change a user’s password (root can change any). |
-| 157 | `chage` | Manage password aging and expiry dates. |
-| 158 | `groups` | Show which groups a user belongs to. |
-| 159 | `whoami` | Print the effective current username. |
-| 160 | `newgrp` | Log in to a new group (temporarily change primary group). |
+| 116 | `tac` | Reverse `cat` – print file lines in reverse order. |
+| 117 | `rev` | Reverse each character in every line. |
+| 118 | `paste` | Merge lines of multiple files side-by-side. |
+| 119 | `join` | Join lines of two sorted files on a common field. |
+| 120 | `comm` | Compare two sorted files line-by-line. |
+| 121 | `nl` | Number lines of a file. |
+| 122 | `fold` | Wrap input lines to fit a specified width. |
+| 123 | `expand` | Convert tabs to spaces. |
+| 124 | `unexpand` | Convert spaces to tabs. |
+| 125 | `seq` | Generate a sequence of numbers (`seq 1 10`). |
+| 126 | `jq` | Parse, filter, and pretty-print JSON — essential if you touch APIs. |
 
----
-
-### Job Scheduling & Shell Environment Control
-
-| # | Command | Description |
-|---|---------|-------------|
-| 161 | `crontab` | Manage cron jobs for scheduled tasks (`-e` to edit). |
-| 162 | `at` | Schedule a one‑time job to run at a specified time. |
-| 163 | `batch` | Run jobs when system load averages are low. |
-| 164 | `screen` | Terminal multiplexer (keep sessions alive; `tmux`’s elder sibling). |
-| 165 | `env` | Run a command in a modified environment or show current env vars. |
-| 166 | `printenv` | Print all or specific environment variables. |
-| 167 | `set` | Show all shell variables and functions (or set shell options). |
-| 168 | `unset` | Remove a shell variable or function. |
-| 169 | `.` (source) | Execute a script in the **current** shell context (e.g., `source ~/.bashrc`). |
-| 170 | `exec` | Replace the current shell with a command (no subshell). |
-
----
-
-### Access Control Lists (ACLs) & Extended Attributes
+##  Process Performance & Low-Level Inspection
 
 | # | Command | Description |
 |---|---------|-------------|
-| 171 | `setfacl` | Set Access Control Lists (fine‑grained per‑user/group permissions). |
-| 172 | `getfacl` | View ACLs on a file/directory. |
-| 173 | `chattr` | Change **extended attributes** (e.g., `+i` to make immutable). |
-| 174 | `lsattr` | List extended attributes of files. |
-| 175 | `stat` | Display detailed file stats (size, inode, times, permissions). |
-| 176 | `install` | Copy files and set attributes (used in Makefiles, like `cp` with chmod). |
-| 177 | `mktemp` | Create a temporary file/directory safely (returns its path). |
-| 178 | `realpath` | Resolve a canonical absolute path (resolves symlinks, `..`). |
-| 179 | `split` | Split a large file into smaller pieces (by size or lines). |
-| 180 | `csplit` | Split a file based on context/patterns (not just line count). |
+| 127 | `lsof` | List open files/sockets (great for `lsof -i :80`). |
+| 128 | `fuser` | Identify processes using a file/socket. |
+| 129 | `iotop` | Real-time disk I/O usage per process (needs root). |
+| 130 | `iostat` | Report CPU and disk I/O statistics. |
+| 131 | `vmstat` | Virtual memory stats – processes, memory, paging, CPU. |
+| 132 | `sar` | Collect, report, and save historical system activity data. |
+| 133 | `pidof` | Find the PID of a running process by name. |
+| 134 | `nice` | Run a process with a modified scheduling priority. |
+| 135 | `renice` | Change the priority of an already-running process. |
+| 136 | `strace` | Trace system calls and signals. Adds real overhead — use for debugging, not in production paths. |
+| 137 | `ltrace` | Like `strace` but traces library calls instead of syscalls. |
+| 138 | `perf` | Modern Linux profiler; `perf trace` is a lighter-weight sibling to `strace`. |
 
----
-
-### Checksums, Encoding & Binary Dumps
-
-| # | Command | Description |
-|---|---------|-------------|
-| 181 | `base64` | Encode/decode data in base64 (great for embedding). |
-| 182 | `md5sum` | Compute and verify MD5 checksums (fast, but cryptographically broken). |
-| 183 | `sha256sum` | SHA‑256 hash – secure and widely used for integrity checks. |
-| 184 | `sha512sum` | SHA‑512 hash – even stronger. |
-| 185 | `cksum` | Print CRC checksum and byte count (POSIX standard). |
-| 186 | `sum` | Older checksum (BSD or System V – not recommended). |
-| 187 | `xxd` | Create hex dump of a file or reverse (convert hex back to binary). |
-| 188 | `od` | Octal/hex dump of a file (octal by default). |
-| 189 | `hexdump` | Display file contents in hex, decimal, ASCII (flexible output). |
-| 190 | `strings` | Extract human‑readable text strings from binary files. |
-
----
-
-### Shell Builtins & Scripting Power‑tools
+##  Hardware & Kernel Deep Dive
 
 | # | Command | Description |
 |---|---------|-------------|
-| 191 | `read` | Read a line from stdin into variables (interactive scripts). |
-| 192 | `shift` | Shift positional parameters to the left (for parsing args). |
-| 193 | `getopts` | Parse command‑line options in a standard way (built‑in). |
-| 194 | `trap` | Catch signals and run commands on exit/interrupt (cleanup). |
-| 195 | `bind` | Display or modify readline key bindings. |
-| 196 | `fc` | List/edit/re‑run previous commands (fix mistakes). |
-| 197 | `ulimit` | Set or display resource limits (open files, stack size, CPU time). |
-| 198 | `wait` | Wait for a background process to finish (used in scripts). |
-| 199 | `exit` | Terminate the current shell with an exit code. |
-| 200 | `logout` | Log out of a login shell (close session). |
+| 139 | `lscpu` | Display CPU architecture info. |
+| 140 | `lsmem` | List memory regions and their availability. |
+| 141 | `lspci` | Show all PCI devices. |
+| 142 | `lsusb` | List USB devices (`-t` for tree view). |
+| 143 | `dmidecode` | Dump DMI/SMBIOS data – hardware serials, BIOS versions. |
+| 144 | `inxi` | All-in-one system info script. |
+| 145 | `neofetch` | Display system info in a pretty, distro-logo format. |
+| 146 | `lsmod` | Show currently loaded kernel modules. |
+| 147 | `modprobe` | Add or remove kernel modules with dependency handling. |
+| 148 | `rmmod` | Remove a kernel module (`-f` to force). |
+
+##  Advanced Networking (DNS, scanning, routing)
+
+| # | Command | Description |
+|---|---------|-------------|
+| 149 | `dig` | DNS lookup utility – A, MX, NS records. |
+| 150 | `nslookup` | Query DNS servers interactively or for a single host. |
+| 151 | `host` | Simple DNS lookup. |
+| 152 | `nmap` | Network discovery and port scanning. |
+| 153 | `telnet` | Connect to remote hosts over TCP (testing raw ports). |
+| 154 | `mtr` | Combines `ping` and `traceroute` in real-time. |
+| 155 | `iftop` | Real-time network bandwidth usage per connection. |
+| 156 | `nethogs` | Show bandwidth usage per process. |
+| 157 | `arp` | View/manage the ARP table. |
+| 158 | `route` | Show/modify IP routing table (deprecated — use `ip route`). |
+
+##  User & Group Administration
+
+| # | Command | Description |
+|---|---------|-------------|
+| 159 | `useradd` | Create a new user account (`-m` for home dir). |
+| 160 | `usermod` | Modify an existing user. |
+| 161 | `userdel` | Delete a user account (`-r` removes home/mail). |
+| 162 | `groupadd` | Create a new group. |
+| 163 | `groupdel` | Delete a group. |
+| 164 | `passwd` | Change a user's password. |
+| 165 | `chage` | Manage password aging and expiry dates. |
+| 166 | `groups` | Show which groups a user belongs to. |
+| 167 | `whoami` | Print the effective current username. |
+| 168 | `newgrp` | Log in to a new group temporarily. |
+
+##  Job Scheduling & Shell Environment Control
+
+| # | Command | Description |
+|---|---------|-------------|
+| 169 | `crontab` | Manage cron jobs (`-e` to edit). |
+| 170 | `at` | Schedule a one-time job. |
+| 171 | `batch` | Run jobs when system load is low. |
+| 172 | `screen` | Terminal multiplexer, tmux's elder sibling. |
+| 173 | `env` | Run a command in a modified environment, or show current env vars. |
+| 174 | `printenv` | Print all or specific environment variables. |
+| 175 | `set` | Show all shell variables/functions or set shell options. |
+| 176 | `unset` | Remove a shell variable or function. |
+| 177 | `.` (source) | Execute a script in the current shell context. |
+| 178 | `exec` | Replace the current shell with a command. |
+
+##  systemd — Service & Log Management
+
+Missing from the original list entirely, and essential on most modern distros.
+
+| # | Command | Description |
+|---|---------|-------------|
+| 179 | `systemctl` | Start, stop, enable, and check status of services (`systemctl status nginx`). |
+| 180 | `journalctl` | Read the systemd journal/logs (`journalctl -xe`, `journalctl -u nginx -f`). |
+| 181 | `systemd-analyze` | Break down and inspect boot time. |
+
+##  Version Control
+
+Not a "core Linux command" per se, but used more than most of this list by
+practically everyone who works in a terminal.
+
+| # | Command | Description |
+|---|---------|-------------|
+| 182 | `git` | Distributed version control — status, commit, branch, diff, log, etc. |
+
+##  Access Control Lists (ACLs) & Extended Attributes
+
+| # | Command | Description |
+|---|---------|-------------|
+| 183 | `setfacl` | Set fine-grained per-user/group permissions. |
+| 184 | `getfacl` | View ACLs on a file/directory. |
+| 185 | `chattr` | Change extended attributes (e.g. `+i` for immutable). |
+| 186 | `lsattr` | List extended attributes of files. |
+| 187 | `stat` | Display detailed file stats. |
+| 188 | `install` | Copy files and set attributes (used in Makefiles). |
+| 189 | `mktemp` | Create a temporary file/directory safely. |
+| 190 | `realpath` | Resolve a canonical absolute path. |
+| 191 | `split` | Split a large file into smaller pieces. |
+| 192 | `csplit` | Split a file based on context/patterns. |
+
+##  Checksums, Encoding & Binary Dumps
+
+| # | Command | Description |
+|---|---------|-------------|
+| 193 | `base64` | Encode/decode data in base64. |
+| 194 | `md5sum` | Compute MD5 checksums (fast, but cryptographically broken). |
+| 195 | `sha256sum` | Secure, widely used integrity check hash. |
+| 196 | `sha512sum` | Even stronger hash. |
+| 197 | `cksum` | Print CRC checksum and byte count. |
+| 198 | `sum` | Older checksum (not recommended). |
+| 199 | `xxd` | Hex dump of a file (or reverse). |
+| 200 | `od` | Octal/hex dump of a file. |
+| 201 | `hexdump` | Display file contents in hex/decimal/ASCII. |
+| 202 | `strings` | Extract human-readable text strings from binary files. |
+
+##  Shell Builtins & Scripting Power-tools
+
+| # | Command | Description |
+|---|---------|-------------|
+| 203 | `read` | Read a line from stdin into variables. |
+| 204 | `shift` | Shift positional parameters to the left. |
+| 205 | `getopts` | Parse command-line options in a standard way. |
+| 206 | `trap` | Catch signals and run cleanup commands on exit/interrupt. |
+| 207 | `bind` | Display or modify readline key bindings. |
+| 208 | `fc` | List/edit/re-run previous commands. |
+| 209 | `ulimit` | Set or display resource limits. |
+| 210 | `wait` | Wait for a background process to finish. |
+| 211 | `exit` | Terminate the current shell with an exit code. |
+| 212 | `logout` | Log out of a login shell. |
+
+##  Modern Replacements (not always preinstalled, worth adding)
+
+These aren't core Unix tools, but each replaces something above with dramatically
+better ergonomics. Most are one `apt install` / `brew install` away.
+
+| Command | Replaces | Why |
+|---------|----------|-----|
+| `ripgrep` (`rg`) | `grep -r` | Much faster, respects `.gitignore` by default. |
+| `fd` | `find` | Sane defaults, far less syntax to remember. |
+| `fzf` | `Ctrl+R` history search | Interactive fuzzy finder — bind it to your history and file picking. |
+| `bat` | `cat` | Syntax highlighting, line numbers, git-diff markers. |
+| `zoxide` | `cd` | Learns your habits; `z proj` jumps to wherever you've `cd`'d before. |
+| `ncdu` | `du -sh */` | Interactive disk-usage browser instead of a static list. |
+| `exa` / `eza` | `ls` | Git-aware, icons, tree view built in. |
+| `tldr` | `man` | Practical usage examples instead of the full manual. |
 
 ---
 
-### Pro Tips
-- **Combine them:** The real power comes from piping (`|`) – e.g., `ps aux | grep nginx`.
-- **Read the manual:** `man command` is your best friend.
-- **Practice:** Try `curl ifconfig.me` to get your public IP, or `find . -name "*.log" -exec tail -n 5 {} \;` to peek at all log files.
+##  Pro Tips
+
+###  Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+A` | Jump to beginning of line. |
+| `Ctrl+E` | Jump to end of line. |
+| `Alt+B` / `Alt+F` | Move backward/forward one word. |
+| `Ctrl+U` | Delete everything before the cursor. |
+| `Ctrl+K` | Delete everything after the cursor. |
+| `Ctrl+W` | Delete the word before the cursor. |
+| `Ctrl+R` | Reverse search history (or bind `fzf` here for something much better). |
+| `Ctrl+L` | Clear screen without leaving the home row. |
+| `Ctrl+D` | Exit current shell/logout. |
+| `Ctrl+Z` | Suspend current process (`fg` to bring it back). |
+| `Ctrl+X Ctrl+E` | Open the current command line in `$EDITOR` — great for fixing a gnarly multi-line command instead of fighting a single-line buffer. |
+
+###  Command History
+
+- `!!` — Run the last command again (`sudo !!` when you forgot `sudo`). **Note:** this is bash's bang-syntax; it mostly works the same in zsh but word-splitting behaves slightly differently — test it in your actual shell before relying on it under pressure.
+- `!$` — Expands to the last argument of the previous command (`mkdir new-folder && cd !$`).
+- `!^` — Expands to the first argument of the previous command.
+- `!string` — Execute the most recent command starting with "string".
+- `Ctrl+R` — Use it until it's muscle memory, or replace it with `fzf` for a much better experience.
+
+###  Brace Expansion & Globbing
+
+- `{a,b,c}` — expands to multiple arguments: `mkdir -p project/{src,dist,tests,docs}`.
+- `{1..10}` — number sequences: `touch file_{1..10}.txt`.
+- `**` (bash 4+/zsh) — recursive globbing: `ls **/*.log`.
+- `shopt -s extglob` then `rm !(*.jpg)` — delete everything except a pattern.
+
+###  Pipes & Redirection
+
+- `|&` — pipes both stdout and stderr: `command |& grep error`.
+- `<(command)` — process substitution, treats output as a file: `diff <(ls dir1) <(ls dir2)`.
+- `&> filename.txt` — shorthand for redirecting all output to a file.
+- `tee` — write to a file while still watching it live: `./script.sh | tee output.log`.
+
+###  Job Control
+
+- `command &` — run in the background immediately.
+- `Ctrl+Z` then `bg` — suspend a foreground job, push it to background.
+- `jobs -l` — list background jobs with PIDs.
+- `disown -h %1` — detach a background job so it survives closing the terminal.
+
+###  Smarter Searching
+
+- `grep -r --include="*.py" "function_name" .` — search only within Python files.
+- `grep -C 5 error log.txt` — 5 lines of context before and after a match.
+- `find . -type f -size +100M` — find files over 100MB.
+- `find . -mtime -1` — files modified in the last 24 hours.
+- `find . -name "*.conf" -exec sed -i 's/old/new/g' {} \;` — recursive find-and-replace.
+- Or just use `rg` — it's faster and defaults to sane behavior.
+
+###  Aliases & Functions
+
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+alias ll='ls -la --color=auto'
+alias gs='git status'
+alias myip='curl -s ifconfig.me'
+
+# Extract any archive type
+extract() {
+  if [ -f "$1" ] ; then
+    case "$1" in
+      *.tar.bz2) tar xvjf "$1" ;;
+      *.tar.gz)  tar xvzf "$1" ;;
+      *.zip)     unzip "$1" ;;
+      *) echo "I don't know how to extract '$1'" ;;
+    esac
+  fi
+}
+```
+
+###  Safety Nets (revised)
+
+- **Skip `alias rm='rm -i'`.** It trains you to reflexively hit `y`/Enter on delete prompts, which defeats its own purpose — and it silently disappears in scripts, `sudo`, or other machines where the alias isn't set, so you can't actually rely on it. Better: install `trash-cli` so deletes go to a recoverable trash instead of vanishing instantly, and get in the habit of running `ls` on a glob before you `rm -rf` it.
+- `chmod -R u+rwX ./folder` — mass-fix permissions on a mixed file/folder structure (uppercase `X` only adds execute to things that already have it somewhere).
+- `ls -ltr` — list files oldest-last, so the newest is at the bottom near your prompt.
+- `Ctrl+_` — undo text editing in Bash, even after typing a long command.
+- `set -euo pipefail` at the top of every bash script — turns silent failures (unset variables, a failed command mid-pipeline) into loud, immediate ones instead of a script that limps along and corrupts something.
+
+###  Debugging Mindset
+
+1. Check the exit code first: `echo $?` (0 = success).
+2. Read the *first* error message, not the wall of red text — scroll to the top.
+3. Check the logs before anything else: `journalctl -xe` (systemd) or `tail -f /var/log/syslog`.
+4. Reach for `strace`/`ltrace`/`perf trace` when you need to see what a process is actually doing — but know they add real overhead, so use them to debug, not in anything performance- or production-sensitive.
+5. `man` is the reference; `tldr` is faster for "just show me an example."
+
+###  Make It Yours
+
+- Customize `PS1` to show `user@host:~/project (git-branch)$`.
+- Install `tldr` for practical examples instead of full manuals.
+- Install `bat` for a `cat` with syntax highlighting.
+- Install `exa`/`eza` for a git-aware, icon-friendly `ls`.
+
+**The real force multiplier:** spend 10 minutes once on your `.bashrc`/`.zshrc` —
+aliases, a couple of the modern replacements above, and `set -euo pipefail` in
+your scripts — and it pays for itself hundreds of times over.
