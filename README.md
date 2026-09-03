@@ -1008,7 +1008,7 @@ man command
 
 Then inspect the target, understand the arguments, and only execute destructive operations after verifying exactly what they will affect.
 
-## 🎮 Terminal Fun & Eye Candy
+## Terminal Fun & Eye Candy
 
 | Tool | Description |
 | --- | --- |
@@ -1021,7 +1021,7 @@ Then inspect the target, understand the arguments, and only execute destructive 
 | `lolcat` | Rainbow-colored terminal output. |
 | `figlet` | Turns text into large ASCII banners. |
 | `toilet` | Another ASCII-art text generator with effects. |
-| `sl` | A joke command for mistyping `ls`. 🚂 |
+| `sl` | A joke command for mistyping `ls`. |
 | `yes` | Repeatedly prints text — surprisingly entertaining when combined with other tools. |
 | `pv` | Shows progress while data flows through a pipe. |
 | `watch` | Continuously reruns a command. |
@@ -1034,7 +1034,7 @@ Then inspect the target, understand the arguments, and only execute destructive 
 | `fzf` | Interactive fuzzy finder for files/history/etc. |
 | `cava` | Terminal audio spectrum visualizer. |
 | `pipes.sh` | Animated pipes flowing around the terminal. |
-| `hollywood` | Simulates a ridiculous “hacker movie” terminal. 😂 |
+| `hollywood` | Simulates a ridiculous “hacker movie” terminal. |
 | `genact` | Fake activity generator that makes your terminal look busy. |
 | `nyancat` | Animated Nyan Cat in the terminal. |
 | `aafire` | ASCII fire effect. |
