@@ -1007,3 +1007,36 @@ man command
 ```
 
 Then inspect the target, understand the arguments, and only execute destructive operations after verifying exactly what they will affect.
+
+## 🎮 Terminal Fun & Eye Candy
+
+| Tool | Description |
+| --- | --- |
+| `cmatrix` | Classic falling “Matrix” characters. |
+| `neofetch` | Display system info with ASCII distro art. |
+| `fastfetch` | Faster, modern alternative to `neofetch`. |
+| `cowsay` | Makes an ASCII cow say something. |
+| `cowthink` | Makes the cow think something. |
+| `fortune` | Prints a random quote/message. |
+| `lolcat` | Rainbow-colored terminal output. |
+| `figlet` | Turns text into large ASCII banners. |
+| `toilet` | Another ASCII-art text generator with effects. |
+| `sl` | A joke command for mistyping `ls`. 🚂 |
+| `yes` | Repeatedly prints text — surprisingly entertaining when combined with other tools. |
+| `pv` | Shows progress while data flows through a pipe. |
+| `watch` | Continuously reruns a command. |
+| `htop` | Interactive process monitor. |
+| `btop` | Beautiful interactive system monitor. |
+| `ncdu` | Interactive disk-usage explorer. |
+| `ranger` | Keyboard-driven terminal file manager. |
+| `nnn` | Very fast terminal file manager. |
+| `yazi` | Modern terminal file manager. |
+| `fzf` | Interactive fuzzy finder for files/history/etc. |
+| `cava` | Terminal audio spectrum visualizer. |
+| `pipes.sh` | Animated pipes flowing around the terminal. |
+| `hollywood` | Simulates a ridiculous “hacker movie” terminal. 😂 |
+| `genact` | Fake activity generator that makes your terminal look busy. |
+| `nyancat` | Animated Nyan Cat in the terminal. |
+| `aafire` | ASCII fire effect. |
+| `oneko` | A little cat follows your cursor around. |
+| `btop` + `cmatrix` | Excellent combination for a “movie hacker” terminal. |
