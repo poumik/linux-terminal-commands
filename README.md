@@ -20,6 +20,23 @@ It is designed for:
 
 ---
 
+## License
+
+This project is licensed under the [MIT License](LICENSE.txt).
+
+---
+
+## Disclaimer
+
+This repository is for educational and reference purposes only.
+
+- Commands and options can vary by Linux distribution, shell, version, and installed packages.
+- Always verify what a command does before running it on a real system.
+- Destructive commands such as `rm`, `mkfs`, `dd`, `fdisk`, and privileged system changes should be reviewed carefully and tested in safe environments when possible.
+- This material is not a substitute for official distro documentation, man pages, or system-specific operational procedures.
+
+---
+
 ## Contents
 
 ### Command fundamentals
@@ -100,3 +117,13 @@ Before running an unfamiliar command:
 ```bash
 command --help
 man command
+```
+
+Then inspect the target, understand the arguments, and avoid destructive operations until you know what they affect.
+
+---
+
+## Repository layout
+
+- [`linux-terminal-commands.md`](linux-terminal-commands.md) — the full reference guide
+- [`LICENSE.txt`](LICENSE.txt) — the project license
