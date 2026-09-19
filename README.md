@@ -81,7 +81,6 @@ The full reference is organized into 25+ sections:
 | File | Purpose |
 |---|---|
 | [`linux-terminal-commands.md`](linux-terminal-commands.md) | The full, canonical reference |
-| [`linux_commands_reference.md`](linux_commands_reference.md) | Legacy early draft — superseded, kept for history |
 
 ## Contributing
 
