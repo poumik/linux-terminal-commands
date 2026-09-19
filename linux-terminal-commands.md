@@ -1182,4 +1182,3 @@ Then inspect the target, understand the arguments, and only execute destructive 
 
 ---
 
-This file fixes the Markdown pipe issue, corrects the kill escalation guidance, moves the fun tools to their proper section, clarifies Bash-only scripting assumptions, adds missing tools and warnings, and keeps the reference consistent with the legend and safety-first style.
