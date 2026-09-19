@@ -1,92 +1,102 @@
-# Linux Terminal Reference — 250+ Commands, Concepts & Recipes
+# Linux Terminal Reference
 
-A practical Linux terminal reference for sysadmins, developers, and advanced users.
+A practical Linux command reference for sysadmins, developers, students, and advanced users.
 
-**→ [Open the full reference](linux-terminal-commands.md)**
+**[Browse the full Linux terminal reference →](linux-terminal-commands.md)**
 
 ---
 
-## What's inside
+## About
 
-The full reference is organized into 25+ sections:
+This repository contains a comprehensive, easy-to-scan reference covering Linux commands, shell concepts, troubleshooting techniques, practical recipes, and safety guidelines.
 
-**Foundations**
-- Command discovery & help
-- Files & directory management
-- Viewing & editing files
-- Text processing & data transformation
-- Pipelines & redirection
+It is designed for:
 
-**System administration**
-- Permissions & ownership
-- Users & groups
-- Processes & job control
-- System & performance monitoring
-- Storage & filesystems
-- systemd, services & logs
+- Learning Linux fundamentals
+- Quickly looking up unfamiliar commands
+- Troubleshooting systems and services
+- Writing safer shell scripts
+- Reviewing networking, storage, permissions, and process-management tools
+
+---
+
+## Contents
+
+### Command fundamentals
+
+- Command discovery and help
+- Files and directory management
+- Viewing and editing files
+- Text processing and data transformation
+- Pipelines and redirection
+
+### System administration
+
+- Permissions and ownership
+- Users and groups
+- Processes and job control
+- System and performance monitoring
+- Storage and filesystems
+- `systemd`, services, and logs
 - Package managers
-- Hardware & kernel inspection
+- Hardware and kernel inspection
 
-**Networking**
-- Networking diagnostics & transfer
+### Networking
 
-**Shell mastery**
-- Shell environment & builtins
-- Shell scripting basics
-- Shell shortcuts, history & globbing
-- Aliases & functions
+- Network interfaces, routes, and sockets
+- DNS diagnostics
+- Connectivity testing
+- HTTP and file transfers
+- SSH and secure file transfer
+- Network discovery and port scanning
 
-**Developer tooling**
-- Executables, libraries & binary inspection
-- Checksums & integrity
-- Archives & compression
-- Version control & development utilities
-- Terminal multiplexing & modern replacements (`rg`, `fd`, `fzf`, `eza`…)
+### Shell scripting
 
-**In practice**
-- Practical troubleshooting workflow
-- Practical recipes (backups, log monitoring, port ownership…)
-- Security & safety rules
-- Quick safety summary
-- Terminal fun & eye candy
+- Environment variables and shell builtins
+- Quoting and argument handling
+- Exit codes and conditions
+- Loops and functions
+- Shell options such as `set -euo pipefail`
+- History, shortcuts, aliases, and globbing
+
+### Developer and diagnostic tools
+
+- Archives and compression
+- Executable and binary inspection
+- Checksums and integrity verification
+- Git and build utilities
+- Terminal multiplexers
+- Modern command-line replacements such as `rg`, `fd`, `fzf`, `bat`, and `eza`
+
+### Practical guidance
+
+- Troubleshooting workflows
+- Backup and file-search recipes
+- Log monitoring
+- Service inspection
+- Port ownership checks
+- Security and command-safety guidance
+- Terminal fun and eye-candy tools
 
 ---
 
-## Legend
+## Safety legend
 
 | Marker | Meaning |
 |---|---|
-| 🟢 | Safe — normally read-only or low-risk |
-| 🟡 | Caution — changes state/configuration but is usually recoverable |
-| 🔴 | Destructive — can delete, overwrite, repartition, or seriously damage data |
-| 🔐 | sudo — commonly requires elevated privileges |
-| 🌍 | Not universal — distro/package-dependent |
-| 💡 | Tip — useful shortcut or best practice |
+| 🟢 | **Safe** — normally read-only or low-risk |
+| 🟡 | **Caution** — changes state or configuration but is usually recoverable |
+| 🔴 | **Destructive** — may delete, overwrite, repartition, or seriously damage data |
+| 🔐 | **Privilege required** — commonly requires `sudo` or elevated permissions |
+| 🌍 | **Not universal** — depends on the distro, shell, or installed packages |
+| 💡 | **Tip** — useful shortcut or best practice |
 
 ---
 
 ## Safety first
 
-- Before unfamiliar commands, try `command --help`, then `man command`.
-- Preview destructive operations first: `tar -tf`, `unzip -l`, `ls *.log` before `rm`.
-- Destructive tools (`dd`, `mkfs`, `fdisk`, `fsck`, `rm -rf`) get 🔴 markers plus a caution note.
-- Availability and exact options vary by distro, shell, and installed packages.
+Before running an unfamiliar command:
 
-**If you don't know what a command does, don't guess.**
-
----
-
-## Repository layout
-
-| File | Purpose |
-|---|---|
-| [`linux-terminal-commands.md`](linux-terminal-commands.md) | The full, canonical reference |
-
-## Contributing
-
-Content changes go to [`linux-terminal-commands.md`](linux-terminal-commands.md), not this README:
-
-- Keep sequential row numbering across tables in the reference.
-- Add the appropriate markers (🟢 🟡 🔴 🔐 🌍 💡) to new rows.
-- Avoid wording that assumes a specific distro; use 🌍 instead.
-- Prefer safe previews (`ls`, `tar -tf`) over destructive examples.
+```bash
+command --help
+man command
