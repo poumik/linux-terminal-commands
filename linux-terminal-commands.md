@@ -277,10 +277,12 @@ setfacl -m u:alice:r file.txt
 💡 Example: add a user to an extra group while keeping existing groups:
 
 ```bash
-sudo usermod -aG docker alice
+sudo usermod -aG developers alice
 ```
 
 ⚠️ Omitting `-a` removes the user from all other groups that are not explicitly listed; use it carefully.
+
+⚠️ Some groups are effectively privileged: membership in `docker` is roughly equivalent to root access, and `sudo` / `wheel` grants administrative rights. Add users only to groups they need.
 
 ---
 
@@ -363,7 +365,7 @@ kill -KILL PID
 | 135 | `ncdu` | Interactive disk-usage browser. 🌍 |
 | 136 | `parted` | Partition disks and resize partitions. 🔴🔐 |
 | 137 | `smartctl` | Read SMART health and diagnostics for drives. 🔐 |
-| 138 | `lvm` | Manage LVM volumes, groups, and snapshots. 🔐 |
+| 138 | `lvm` | Manage LVM volumes, groups, and snapshots. 🟡🔐 |
 | 139 | `swapon` | Enable swap devices/files. 🔐 |
 
 ⚠️ `dd`, `mkfs`, partitioning tools, and filesystem repair commands can destroy data if pointed at the wrong device.
@@ -388,7 +390,7 @@ kill -KILL PID
 | 149 | `wget` | Download files non-interactively. |
 | 150 | `ssh` | Secure remote shell. |
 | 151 | `scp` | Copy files over SSH. |
-| 152 | `rsync` | Efficient remote or local file sync and transfer. |
+| 152 | `rsync` | Efficient remote or local file sync and transfer. 🟡 |
 | 153 | `sftp` | Interactive file transfer over SSH. |
 | 154 | `ssh-keygen` | Generate/manage SSH keys. |
 | 155 | `ssh-agent` | Cache SSH private-key credentials. |
@@ -400,10 +402,10 @@ kill -KILL PID
 | 161 | `getent` | Query NSS databases such as users, groups, and hosts. |
 | 162 | `nmap` | Network discovery and port scanning. 🌍 |
 | 163 | `tcpdump` | Capture packets on an interface. 🌍🔐 |
-| 164 | `ufw` | Manage the Uncomplicated Firewall. 🌍🔐 |
-| 165 | `nft` | Manage nftables firewall rules. 🌍🔐 |
-| 166 | `iptables` | Legacy packet filter firewall rules. 🌍🔐 |
-| 167 | `firewall-cmd` | Manage firewalld rules. 🌍🔐 |
+| 164 | `ufw` | Manage the Uncomplicated Firewall. 🟡🌍🔐 |
+| 165 | `nft` | Manage nftables firewall rules. 🟡🌍🔐 |
+| 166 | `iptables` | Legacy packet filter firewall rules. 🟡🌍🔐 |
+| 167 | `firewall-cmd` | Manage firewalld rules. 🟡🌍🔐 |
 
 Examples:
 
@@ -418,7 +420,9 @@ lsof -i :8080
 
 💡 `netstat` and `ifconfig` are legacy; prefer `ss`, `ip`, and `ip addr` / `ip route`.
 
-⚠️ Only scan networks or hosts you are authorised to test.
+⚠️ Only scan networks, hosts, or traffic you are authorised to test or capture.
+
+⚠️ Firewall changes (`ufw`, `nft`, `iptables`, `firewall-cmd`) can lock you out of a remote machine. Allow SSH before enabling default-deny rules, and keep a second session open while testing.
 
 ---
 
@@ -642,11 +646,11 @@ depending on shell options.
 | 200 | `systemctl` | Start/stop/status/enable services. 🌍🔐 |
 | 201 | `journalctl` | Read systemd journal logs. 🌍 |
 | 202 | `systemd-analyze` | Inspect boot performance and systemd state. 🌍 |
-| 203 | `dmesg` | Read kernel ring-buffer messages. 🔐/permissions vary |
+| 203 | `dmesg` | Read kernel ring-buffer messages. 🔐 (access may be restricted) |
 | 204 | `logger` | Send a message to the system log. |
 | 205 | `logrotate` | Rotate/compress logs. 🌍 |
 | 206 | `cron` | Schedule recurring jobs. 🌍 |
-| 207 | `crontab` | View/edit user cron jobs. 🟡 |
+| 207 | `crontab` | View/edit user cron jobs. 🟡🌍 |
 | 208 | `hostnamectl` | Query/set hostname in systemd-based systems. 🌍 |
 | 209 | `timedatectl` | Query/set date/time and timezone in systemd-based systems. 🌍 |
 
@@ -679,7 +683,7 @@ Common log locations vary by distro and configuration:
 
 Do not assume every file exists on every Linux distribution; systemd journal may be the primary log source.
 
-💡 `systemd` timers are typically configured via unit files in `/etc/systemd/system/` or `/usr/lib/systemd/system/` and managed with `systemctl enable --now <timer>.service`.
+💡 `systemd` timers are typically a `.timer` unit plus a matching `.service` unit in `/etc/systemd/system/` (or packaged under `/usr/lib/systemd/system/`). Enable one with `systemctl enable --now <name>.timer`.
 
 ---
 
@@ -729,8 +733,6 @@ Always check the package manager appropriate to the distribution rather than ass
 cat /etc/os-release
 ```
 
-Related tools: `parted`, `smartctl`, `swapon`, `lvm`.
-
 ---
 
 # 19. Executables, Libraries & Binary Inspection
@@ -766,7 +768,7 @@ objdump -p ./binary | grep NEEDED
 | 238 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
 | 239 | `cksum` | CRC checksum and byte count. |
 | 240 | `sum` | Legacy checksum utility. |
-| 241 | `gpg` | sign, verify, encrypt, and manage keys. |
+| 241 | `gpg` | Sign, verify, encrypt, and manage keys. |
 
 Example:
 
@@ -887,10 +889,16 @@ tar -czf project-backup-$(date +%F).tar.gz ./project
 ## Synchronize directories/files
 
 ```bash
+# Preview first (changes nothing)
+rsync -avn --delete ./project/ backup-host:/srv/project/
+
+# Then run for real
 rsync -av --delete ./project/ backup-host:/srv/project/
 ```
 
-💡 `rsync` is ideal for backups, mirroring, and efficient updates; prefer `-n` or `--dry-run` when testing.
+💡 `rsync` is ideal for backups, mirroring, and efficient updates; use `-n` / `--dry-run` to preview.
+
+⚠️ `--delete` removes files from the destination that do not exist in the source. A trailing slash on the source (`./project/`) copies the directory's contents; without it, the directory itself is copied.
 
 ## Find large files
 
@@ -1090,7 +1098,7 @@ extract() {
         *.tar.gz|*.tgz) tar -xzf "$1" ;;
         *.tar.bz2)      tar -xjf "$1" ;;
         *.tar.xz)       tar -xJf "$1" ;;
-        *.tar.zst|*.zst) zstd -d -c "$1" | tar -xf - ;;
+        *.tar.zst|*.tzst) tar --zstd -xf "$1" ;;
         *.zip)           unzip "$1" ;;
         *)               printf 'Unknown archive: %s\n' "$1" ;;
     esac
@@ -1118,27 +1126,27 @@ Useful customizations:
 
 | # | Tool | Description |
 |---|---|---|
-| 1 | `cmatrix` | Classic falling “Matrix” characters. 🌍 |
-| 2 | `neofetch` | Display system info with ASCII distro art. 🌍 |
-| 3 | `fastfetch` | Faster, modern alternative to `neofetch`. 🌍 |
-| 4 | `cowsay` | Makes an ASCII cow say something. 🌍 |
-| 5 | `cowthink` | Makes the cow think something. 🌍 |
-| 6 | `fortune` | Prints a random quote/message. 🌍 |
-| 7 | `lolcat` | Rainbow-colored terminal output. 🌍 |
-| 8 | `figlet` | Turns text into large ASCII banners. 🌍 |
-| 9 | `toilet` | Another ASCII-art text generator with effects. 🌍 |
-| 10 | `sl` | A joke command for mistyping `ls`. 🌍 |
-| 11 | `pv` | Shows progress while data flows through a pipe. 🌍 |
-| 12 | `ranger` | Keyboard-driven terminal file manager. 🌍 |
-| 13 | `nnn` | Very fast terminal file manager. 🌍 |
-| 14 | `yazi` | Modern terminal file manager. 🌍 |
-| 15 | `cava` | Terminal audio spectrum visualizer. 🌍 |
-| 16 | `pipes.sh` | Animated pipes flowing around the terminal. 🌍 |
-| 17 | `hollywood` | Simulates a ridiculous “hacker movie” terminal. 🌍 |
-| 18 | `genact` | Fake activity generator that makes your terminal look busy. 🌍 |
-| 19 | `nyancat` | Animated Nyan Cat in the terminal. 🌍 |
-| 20 | `aafire` | ASCII fire effect. 🌍 |
-| 21 | `oneko` | A little cat follows your cursor around. 🌍 |
+| 256 | `cmatrix` | Classic falling “Matrix” characters. 🌍 |
+| 257 | `neofetch` | Display system info with ASCII distro art. 🌍 |
+| 258 | `fastfetch` | Faster, modern alternative to `neofetch`. 🌍 |
+| 259 | `cowsay` | Makes an ASCII cow say something. 🌍 |
+| 260 | `cowthink` | Makes the cow think something. 🌍 |
+| 261 | `fortune` | Prints a random quote/message. 🌍 |
+| 262 | `lolcat` | Rainbow-colored terminal output. 🌍 |
+| 263 | `figlet` | Turns text into large ASCII banners. 🌍 |
+| 264 | `toilet` | Another ASCII-art text generator with effects. 🌍 |
+| 265 | `sl` | A joke command for mistyping `ls`. 🌍 |
+| 266 | `pv` | Shows progress while data flows through a pipe. 🌍 |
+| 267 | `ranger` | Keyboard-driven terminal file manager. 🌍 |
+| 268 | `nnn` | Very fast terminal file manager. 🌍 |
+| 269 | `yazi` | Modern terminal file manager. 🌍 |
+| 270 | `cava` | Terminal audio spectrum visualizer. 🌍 |
+| 271 | `pipes.sh` | Animated pipes flowing around the terminal. 🌍 |
+| 272 | `hollywood` | Simulates a ridiculous “hacker movie” terminal. 🌍 |
+| 273 | `genact` | Fake activity generator that makes your terminal look busy. 🌍 |
+| 274 | `nyancat` | Animated Nyan Cat in the terminal. 🌍 |
+| 275 | `aafire` | ASCII fire effect. 🌍 |
+| 276 | `oneko` | A little cat follows your cursor around. 🌍 |
 
 These are fun tools and can be useful for demos, screen sharing, or just making a terminal feel less intimidating.
 
@@ -1162,6 +1170,11 @@ These are fun tools and can be useful for demos, screen sharing, or just making 
 | `fdisk` / partitioning | 🔴 Can destroy partitions/data |
 | `fsck` | 🟡/🔴 Repair operations can be destructive |
 | `userdel -r` | 🔴 Removes account/home data |
+| `rsync --delete` | 🟡/🔴 Deletes destination files missing from the source; preview with `-n` first |
+| `ufw`, `nft`, `iptables`, `firewall-cmd` | 🟡 Can block your own SSH session on remote machines |
+| `crontab -r` | 🔴 Removes all of a user's scheduled jobs immediately |
+| `lvremove`, `vgremove`, `pvremove` | 🔴 Destroys LVM volumes, groups, or metadata |
+| `usermod -G` (without `-a`) | 🟡 Replaces the user's supplementary groups |
 | `ldd` | 🟡 Can execute an inspected binary |
 | `apt` / `dnf` / `pacman` / `apk` / `zypper` | 🌍 Distro-specific |
 
@@ -1179,6 +1192,3 @@ man command
 ```
 
 Then inspect the target, understand the arguments, and only execute destructive operations after verifying exactly what they will affect.
-
----
-
