@@ -57,6 +57,8 @@ This repository is for educational and reference purposes only.
 - `systemd`, services, and logs
 - Package managers
 - Hardware and kernel inspection
+- Scheduling with `cron` and systemd timers
+- Firewall tooling (`ufw`, `nft`, `iptables`, `firewalld`)
 
 ### Networking
 
@@ -65,6 +67,7 @@ This repository is for educational and reference purposes only.
 - Connectivity testing
 - HTTP and file transfers
 - SSH and secure file transfer
+- `rsync` for backup and synchronization
 - Network discovery and port scanning
 
 ### Shell scripting
@@ -81,6 +84,7 @@ This repository is for educational and reference purposes only.
 - Archives and compression
 - Executable and binary inspection
 - Checksums and integrity verification
+- `gpg` for signing, verification, and encryption
 - Git and build utilities
 - Terminal multiplexers
 - Modern command-line replacements such as `rg`, `fd`, `fzf`, `bat`, and `eza`
@@ -97,16 +101,16 @@ This repository is for educational and reference purposes only.
 
 ---
 
-## Safety legend
+## Legend
 
 | Marker | Meaning |
 |---|---|
-| 🟢 | **Safe** — normally read-only or low-risk |
-| 🟡 | **Caution** — changes state or configuration but is usually recoverable |
-| 🔴 | **Destructive** — may delete, overwrite, repartition, or seriously damage data |
-| 🔐 | **Privilege required** — commonly requires `sudo` or elevated permissions |
-| 🌍 | **Not universal** — depends on the distro, shell, or installed packages |
-| 💡 | **Tip** — useful shortcut or best practice |
+| 🟢 | Safe — normally read-only or low-risk |
+| 🟡 | Caution — changes state or configuration but is usually recoverable |
+| 🔴 | Destructive — may delete, overwrite, repartition, or seriously damage data |
+| 🔐 | sudo — commonly requires elevated privileges |
+| 🌍 | Not universal — distro/package-dependent |
+| 💡 | Tip — useful shortcut or best practice |
 
 ---
 
