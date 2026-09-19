@@ -1,4 +1,4 @@
-# Linux Terminal Reference — 240+ Commands, Concepts & Recipes
+# Linux Terminal Reference — 250+ Commands, Concepts & Recipes
 
 A practical Linux terminal reference for sysadmins, developers, and advanced users.
 
@@ -368,6 +368,8 @@ kill -KILL PID
 
 ⚠️ `dd`, `mkfs`, partitioning tools, and filesystem repair commands can destroy data if pointed at the wrong device.
 
+💡 Read-only LVM inspection tools such as `pvs`, `vgs`, and `lvs` are usually safe. Create/remove operations such as `lvcreate`, `lvremove`, `vgremove`, and `pvremove` are destructive and should be treated with caution.
+
 ---
 
 # 11. Networking Diagnostics & Transfer
@@ -490,12 +492,15 @@ tar -czf backup.tar.gz ./project
 
 # 14. Shell Scripting Basics
 
-These examples assume Bash syntax (`[[ ... ]]`, `pipefail`, arrays, and `#!/usr/bin/env bash`). They are not POSIX `sh`-portable.
+These examples assume Bash syntax (`[[ ... ]]`, `pipefail`, and common Bash builtins). They are not POSIX `sh`-portable.
+
+```bash
+#!/usr/bin/env bash
+```
 
 ## Variables
 
 ```bash
-#!/usr/bin/env bash
 name="Linux"
 echo "$name"
 ```
@@ -515,7 +520,6 @@ Prefer quoting variables unless you specifically need shell word splitting/globb
 ## Exit codes
 
 ```bash
-#!/usr/bin/env bash
 command
 echo $?
 ```
@@ -543,7 +547,6 @@ some_command "$@"
 ## Conditions
 
 ```bash
-#!/usr/bin/env bash
 if [[ -f "$file" ]]; then
     echo "File exists"
 else
@@ -554,7 +557,6 @@ fi
 ## Loops
 
 ```bash
-#!/usr/bin/env bash
 for file in *.log; do
     echo "$file"
 done
@@ -567,7 +569,6 @@ done < input.txt
 ## Functions
 
 ```bash
-#!/usr/bin/env bash
 greet() {
     printf 'Hello, %s\n' "$1"
 }
@@ -578,7 +579,6 @@ greet "world"
 ## Safer Bash defaults
 
 ```bash
-#!/usr/bin/env bash
 set -euo pipefail
 ```
 
@@ -646,7 +646,7 @@ depending on shell options.
 | 204 | `logger` | Send a message to the system log. |
 | 205 | `logrotate` | Rotate/compress logs. 🌍 |
 | 206 | `cron` | Schedule recurring jobs. 🌍 |
-| 207 | `crontab` | View/edit user cron jobs. 🌍 |
+| 207 | `crontab` | View/edit user cron jobs. 🟡 |
 | 208 | `hostnamectl` | Query/set hostname in systemd-based systems. 🌍 |
 | 209 | `timedatectl` | Query/set date/time and timezone in systemd-based systems. 🌍 |
 
@@ -663,6 +663,8 @@ crontab -l
 systemctl list-timers --all
 hostnamectl
 ```
+
+⚠️ `crontab -r` removes all scheduled jobs for the current user immediately. Prefer `crontab -ri` if you want an interactive confirmation prompt.
 
 Common log locations vary by distro and configuration:
 
@@ -720,10 +722,14 @@ Always check the package manager appropriate to the distribution rather than ass
 | 225 | `lsmod` | Loaded kernel modules. |
 | 226 | `modprobe` | Load/remove kernel modules. 🔐 |
 | 227 | `rmmod` | Remove a kernel module. 🔐 |
-| 228 | `lsblk` | List block devices. |
-| 229 | `cat /etc/os-release` | Show OS metadata such as distro, version, and name. |
 
-Related tools: `parted`, `smartctl`, `swapon`, `lsblk`, `lvm`.
+💡 To inspect OS identity and version metadata:
+
+```bash
+cat /etc/os-release
+```
+
+Related tools: `parted`, `smartctl`, `swapon`, `lvm`.
 
 ---
 
@@ -731,14 +737,14 @@ Related tools: `parted`, `smartctl`, `swapon`, `lsblk`, `lvm`.
 
 | # | Command | Description |
 |---|---|---|
-| 230 | `ldd` | Show shared-library dependencies. |
-| 231 | `ldconfig` | Manage the shared-library cache. 🔐 |
-| 232 | `readelf` | Inspect ELF executable/object metadata. |
-| 233 | `objdump` | Inspect/disassemble object files and binaries. |
-| 234 | `strings` | Extract human-readable strings from binary data. |
-| 235 | `xxd` | Hex dump/create binary data. |
-| 236 | `hexdump` | Display binary data in hexadecimal/other formats. |
-| 237 | `od` | Octal/hex/decimal dump. |
+| 228 | `ldd` | Show shared-library dependencies. |
+| 229 | `ldconfig` | Manage the shared-library cache. 🔐 |
+| 230 | `readelf` | Inspect ELF executable/object metadata. |
+| 231 | `objdump` | Inspect/disassemble object files and binaries. |
+| 232 | `strings` | Extract human-readable strings from binary data. |
+| 233 | `xxd` | Hex dump/create binary data. |
+| 234 | `hexdump` | Display binary data in hexadecimal/other formats. |
+| 235 | `od` | Octal/hex/decimal dump. |
 
 These are particularly useful for debugging missing libraries, architecture mismatches, ELF issues, and unfamiliar binaries.
 
@@ -755,11 +761,12 @@ objdump -p ./binary | grep NEEDED
 
 | # | Command | Description |
 |---|---|---|
-| 238 | `sha256sum` | SHA-256 checksum. |
-| 239 | `sha512sum` | SHA-512 checksum. |
-| 240 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
-| 241 | `cksum` | CRC checksum and byte count. |
-| 242 | `sum` | Legacy checksum utility. |
+| 236 | `sha256sum` | SHA-256 checksum. |
+| 237 | `sha512sum` | SHA-512 checksum. |
+| 238 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
+| 239 | `cksum` | CRC checksum and byte count. |
+| 240 | `sum` | Legacy checksum utility. |
+| 241 | `gpg` | sign, verify, encrypt, and manage keys. |
 
 Example:
 
@@ -775,11 +782,10 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 243 | `git` | Distributed version control. |
-| 244 | `make` | Build automation. 🌍 |
-| 245 | `shellcheck` | Static analysis for shell scripts. 🌍 |
-| 246 | `shfmt` | Format shell scripts. 🌍 |
-| 247 | `gpg` | Encrypt, sign, and manage keys. |
+| 242 | `git` | Distributed version control. |
+| 243 | `make` | Build automation. 🌍 |
+| 244 | `shellcheck` | Static analysis for shell scripts. 🌍 |
+| 245 | `shfmt` | Format shell scripts. 🌍 |
 
 ---
 
@@ -787,16 +793,16 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 248 | `tmux` | Persistent terminal sessions/panes. 🌍 |
-| 249 | `screen` | Terminal multiplexer. |
-| 250 | `entr` | Re-run commands when files change. 🌍 |
-| 251 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
-| 252 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
-| 253 | `fzf` | Interactive fuzzy finder. 🌍 |
-| 254 | `bat` | `cat` alternative with highlighting. 🌍 |
-| 255 | `zoxide` | Smarter directory jumping. 🌍 |
-| 256 | `eza` | Modern `ls` alternative. 🌍 |
-| 257 | `tldr` | Concise command examples. 🌍 |
+| 246 | `tmux` | Persistent terminal sessions/panes. 🌍 |
+| 247 | `screen` | Terminal multiplexer. |
+| 248 | `entr` | Re-run commands when files change. 🌍 |
+| 249 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
+| 250 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
+| 251 | `fzf` | Interactive fuzzy finder. 🌍 |
+| 252 | `bat` | `cat` alternative with highlighting. 🌍 |
+| 253 | `zoxide` | Smarter directory jumping. 🌍 |
+| 254 | `eza` | Modern `ls` alternative. 🌍 |
+| 255 | `tldr` | Concise command examples. 🌍 |
 
 Note: `exa` is largely superseded by `eza`; use `eza` for a current recommendation.
 
