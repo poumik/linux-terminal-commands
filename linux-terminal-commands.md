@@ -1,6 +1,8 @@
-# Linux Terminal Reference — 250+ Commands, Concepts & Recipes
+# Linux Terminal Reference — 240+ Commands, Concepts & Recipes
 
 A practical Linux terminal reference for sysadmins, developers, and advanced users.
+
+This file is the canonical reference. The README is intentionally shorter and links back to this document.
 
 ## Legend
 
@@ -13,6 +15,39 @@ A practical Linux terminal reference for sysadmins, developers, and advanced use
 
 > **Before unfamiliar commands:** try `command --help`, then `man command`.
 > Availability and exact options can vary by distro, shell, and installed packages.
+
+## Table of contents
+
+1. [Command Discovery & Help](#1-command-discovery--help)
+2. [Files & Directory Management](#2-files--directory-management)
+3. [Viewing & Editing Files](#3-viewing--editing-files)
+4. [Text Processing & Data Transformation](#4-text-processing--data-transformation)
+5. [Pipelines & Redirection](#5-pipelines--redirection)
+6. [Permissions & Ownership](#6-permissions--ownership)
+7. [Users & Groups](#7-users--groups)
+8. [Processes & Job Control](#8-processes--job-control)
+9. [System & Performance Monitoring](#9-system--performance-monitoring)
+10. [Storage & Filesystems](#10-storage--filesystems)
+11. [Networking Diagnostics & Transfer](#11-networking-diagnostics--transfer)
+12. [Archives & Compression](#12-archives--compression)
+13. [Shell Environment & Builtins](#13-shell-environment--builtins)
+14. [Shell Scripting Basics](#14-shell-scripting-basics)
+15. [Shell Shortcuts, History & Globbing](#15-shell-shortcuts-history--globbing)
+16. [systemd, Services & Logs](#16-systemd-services--logs)
+17. [Package Managers](#17-package-managers)
+18. [Hardware & Kernel Inspection](#18-hardware--kernel-inspection)
+19. [Executables, Libraries & Binary Inspection](#19-executables-libraries--binary-inspection)
+20. [Checksums & Integrity](#20-checksums--integrity)
+21. [Version Control & Development Utilities](#21-version-control--development-utilities)
+22. [Terminal Multiplexing & Modern Replacements](#22-terminal-multiplexing--modern-replacements)
+23. [Practical Troubleshooting Workflow](#23-practical-troubleshooting-workflow)
+24. [Practical Recipes](#24-practical-recipes)
+25. [Security & Safety Rules](#25-security--safety-rules)
+26. [Aliases & Functions](#26-aliases--functions)
+27. [Make It Yours](#27-make-it-yours)
+28. [Terminal Fun & Eye Candy](#28-terminal-fun--eye-candy)
+29. [Quick Safety Summary](#29-quick-safety-summary)
+30. [Final Rule](#30-final-rule)
 
 ---
 
@@ -52,8 +87,8 @@ type cd
 | 13 | `mkdir` | Create directories (`-p` creates parents). |
 | 14 | `rmdir` | Remove an empty directory. |
 | 15 | `rm` | Remove files/directories. 🔴 |
-| 16 | `cp` | Copy files/directories. |
-| 17 | `mv` | Move or rename files/directories. |
+| 16 | `cp` | Copy files/directories. 🟡 |
+| 17 | `mv` | Move or rename files/directories. 🟡 |
 | 18 | `touch` | Create a file or update timestamps. |
 | 19 | `ln` | Create hard or symbolic links. |
 | 20 | `find` | Search for files/directories by many criteria. |
@@ -74,6 +109,8 @@ type cd
 ls *.log
 rm -- *.log
 ```
+
+⚠️ `cp`, `mv`, `>`, and `tee` can overwrite files silently unless you guard against it. Use `cp -n`, `cp -i`, `mv -n`, `mv -i`, or `set -o noclobber` when you want explicit protection.
 
 ---
 
@@ -147,8 +184,8 @@ These are shell operators rather than standalone commands, but they are fundamen
 | `2>` | Redirect stderr. |
 | `2>>` | Append stderr. |
 | `2>&1` | Send stderr to the same destination as stdout. |
-| `|` | Pipe stdout into another command's stdin. |
-| `|&` | Pipe stdout and stderr together in Bash. |
+| `\|` | Pipe stdout into another command's stdin. |
+| `\|&` | Pipe stdout and stderr together in Bash. |
 | `tee` | View output while writing it to a file. |
 | `$(command)` | Command substitution. |
 | `<(command)` | Process substitution in Bash/Zsh. |
@@ -237,6 +274,14 @@ setfacl -m u:alice:r file.txt
 | 87 | `groupdel` | Delete a group. 🔴🔐 |
 | 88 | `newgrp` | Temporarily switch effective group. |
 
+💡 Example: add a user to an extra group while keeping existing groups:
+
+```bash
+sudo usermod -aG docker alice
+```
+
+⚠️ Omitting `-a` removes the user from all other groups that are not explicitly listed; use it carefully.
+
 ---
 
 # 8. Processes & Job Control
@@ -267,11 +312,13 @@ setfacl -m u:alice:r file.txt
 
 ```bash
 kill PID
-# If it refuses to exit:
-kill -TERM PID
-# Last resort:
+# Wait a few seconds and check status
+ps -p PID
+# If it is still stuck:
 kill -KILL PID
 ```
+
+`kill` sends `SIGTERM` by default, so `kill -TERM PID` is usually the same as `kill PID`.
 
 ---
 
@@ -314,6 +361,10 @@ kill -KILL PID
 | 133 | `dd` | Low-level byte-for-byte copying/conversion. 🔴🔐 |
 | 134 | `sync` | Flush filesystem buffers. |
 | 135 | `ncdu` | Interactive disk-usage browser. 🌍 |
+| 136 | `parted` | Partition disks and resize partitions. 🔴🔐 |
+| 137 | `smartctl` | Read SMART health and diagnostics for drives. 🔐 |
+| 138 | `lvm` | Manage LVM volumes, groups, and snapshots. 🔐 |
+| 139 | `swapon` | Enable swap devices/files. 🔐 |
 
 ⚠️ `dd`, `mkfs`, partitioning tools, and filesystem repair commands can destroy data if pointed at the wrong device.
 
@@ -323,28 +374,34 @@ kill -KILL PID
 
 | # | Command | Description |
 |---|---|---|
-| 136 | `ip` | Inspect/manage interfaces, addresses, and routes. |
-| 137 | `ss` | Inspect sockets/listening ports. |
-| 138 | `ping` | Test IP connectivity with ICMP. |
-| 139 | `traceroute` | Trace network paths. 🌍 |
-| 140 | `mtr` | Interactive ping + traceroute. 🌍 |
-| 141 | `dig` | Detailed DNS queries. 🌍 |
-| 142 | `nslookup` | DNS queries. |
-| 143 | `host` | Simple DNS lookup. |
-| 144 | `curl` | Transfer/test HTTP and other protocols. |
-| 145 | `wget` | Download files non-interactively. |
-| 146 | `ssh` | Secure remote shell. |
-| 147 | `scp` | Copy files over SSH. |
-| 148 | `sftp` | Interactive file transfer over SSH. |
-| 149 | `ssh-keygen` | Generate/manage SSH keys. |
-| 150 | `ssh-agent` | Cache SSH private-key credentials. |
-| 151 | `nc` | Read/write TCP/UDP connections. 🌍 |
-| 152 | `openssl` | TLS, certificates, hashes, and crypto utilities. |
-| 153 | `ethtool` | Inspect/configure Ethernet interface capabilities. 🔐🌍 |
-| 154 | `nmcli` | Manage NetworkManager from the CLI. 🌍 |
-| 155 | `resolvectl` | Inspect/test systemd-resolved DNS. 🌍 |
-| 156 | `getent` | Query NSS databases such as users, groups, and hosts. |
-| 157 | `nmap` | Network discovery and port scanning. 🌍 |
+| 140 | `ip` | Inspect/manage interfaces, addresses, and routes. |
+| 141 | `ss` | Inspect sockets/listening ports. |
+| 142 | `ping` | Test IP connectivity with ICMP. |
+| 143 | `traceroute` | Trace network paths. 🌍 |
+| 144 | `mtr` | Interactive ping + traceroute. 🌍 |
+| 145 | `dig` | Detailed DNS queries. 🌍 |
+| 146 | `nslookup` | DNS queries. |
+| 147 | `host` | Simple DNS lookup. |
+| 148 | `curl` | Transfer/test HTTP and other protocols. |
+| 149 | `wget` | Download files non-interactively. |
+| 150 | `ssh` | Secure remote shell. |
+| 151 | `scp` | Copy files over SSH. |
+| 152 | `rsync` | Efficient remote or local file sync and transfer. |
+| 153 | `sftp` | Interactive file transfer over SSH. |
+| 154 | `ssh-keygen` | Generate/manage SSH keys. |
+| 155 | `ssh-agent` | Cache SSH private-key credentials. |
+| 156 | `nc` | Read/write TCP/UDP connections. 🌍 |
+| 157 | `openssl` | TLS, certificates, hashes, and crypto utilities. |
+| 158 | `ethtool` | Inspect/configure Ethernet interface capabilities. 🔐🌍 |
+| 159 | `nmcli` | Manage NetworkManager from the CLI. 🌍 |
+| 160 | `resolvectl` | Inspect/test systemd-resolved DNS. 🌍 |
+| 161 | `getent` | Query NSS databases such as users, groups, and hosts. |
+| 162 | `nmap` | Network discovery and port scanning. 🌍 |
+| 163 | `tcpdump` | Capture packets on an interface. 🌍🔐 |
+| 164 | `ufw` | Manage the Uncomplicated Firewall. 🌍🔐 |
+| 165 | `nft` | Manage nftables firewall rules. 🌍🔐 |
+| 166 | `iptables` | Legacy packet filter firewall rules. 🌍🔐 |
+| 167 | `firewall-cmd` | Manage firewalld rules. 🌍🔐 |
 
 Examples:
 
@@ -357,21 +414,25 @@ curl -I https://example.com
 lsof -i :8080
 ```
 
+💡 `netstat` and `ifconfig` are legacy; prefer `ss`, `ip`, and `ip addr` / `ip route`.
+
+⚠️ Only scan networks or hosts you are authorised to test.
+
 ---
 
 # 12. Archives & Compression
 
 | # | Command | Description |
 |---|---|---|
-| 158 | `tar` | Create/list/extract tar archives. |
-| 159 | `gzip` | Compress/decompress gzip data. |
-| 160 | `gunzip` | Decompress gzip files. |
-| 161 | `bzip2` | Compress/decompress bzip2 data. |
-| 162 | `xz` | High-ratio compression. |
-| 163 | `zstd` | Fast modern compression. 🌍 |
-| 164 | `zip` | Create ZIP archives. |
-| 165 | `unzip` | Extract/list ZIP archives. |
-| 166 | `7z` | 7-Zip archive utility. 🌍 |
+| 168 | `tar` | Create/list/extract tar archives. |
+| 169 | `gzip` | Compress/decompress gzip data. |
+| 170 | `gunzip` | Decompress gzip files. |
+| 171 | `bzip2` | Compress/decompress bzip2 data. |
+| 172 | `xz` | High-ratio compression. |
+| 173 | `zstd` | Fast modern compression. 🌍 |
+| 174 | `zip` | Create ZIP archives. |
+| 175 | `unzip` | Extract/list ZIP archives. |
+| 176 | `7z` | 7-Zip archive utility. 🌍 |
 
 Useful `tar` patterns:
 
@@ -391,7 +452,9 @@ tar -xzf archive.tar.gz -C ./destination
 tar -czf backup.tar.gz ./project
 ```
 
-💡 Before extracting an untrusted archive, inspect its contents with `tar -tf`/`unzip -l`. Be cautious of archives containing absolute paths or `../` traversal entries.
+💡 GNU `tar` auto-detects compression on extract, so `tar -xf` often works for `.tar.gz`, `.tar.xz`, and `.tar.zst` without explicitly specifying `-z`/`-J`/`--zstd`.
+
+💡 Before extracting an untrusted archive, inspect its contents with `tar -tf` / `unzip -l`. Be cautious of archives containing absolute paths or `../` traversal entries.
 
 ---
 
@@ -399,37 +462,40 @@ tar -czf backup.tar.gz ./project
 
 | # | Command | Description |
 |---|---|---|
-| 167 | `echo` | Print text/variables. |
-| 168 | `printf` | Predictable formatted output; preferred over `echo` in many scripts. |
-| 169 | `export` | Export environment variables to child processes. |
-| 170 | `env` | Display/run commands with environment settings. |
-| 171 | `printenv` | Print environment variables. |
-| 172 | `set` | Show/set shell variables and options. |
-| 173 | `unset` | Remove shell variables/functions. |
-| 174 | `source` / `.` | Execute a script in the current shell. |
-| 175 | `exec` | Replace the current shell process with a command. |
-| 176 | `read` | Read input into variables. |
-| 177 | `shift` | Shift positional parameters. |
-| 178 | `getopts` | Parse shell-script options. |
-| 179 | `trap` | Run actions when signals/events occur. |
-| 180 | `ulimit` | View/set shell resource limits. |
-| 181 | `exit` | Exit a shell/script with a status. |
-| 182 | `logout` | Log out of a login shell. |
-| 183 | `clear` | Clear the terminal display. |
-| 184 | `history` | Show shell command history. |
-| 185 | `alias` | Define command shortcuts. |
-| 186 | `sleep` | Pause execution. |
-| 187 | `yes` | Repeatedly output text. |
-| 188 | `fc` | List/edit/re-run previous commands. |
-| 189 | `bind` | Configure/readline key bindings in Bash. |
+| 177 | `echo` | Print text/variables. |
+| 178 | `printf` | Predictable formatted output; preferred over `echo` in many scripts. |
+| 179 | `export` | Export environment variables to child processes. |
+| 180 | `env` | Display/run commands with environment settings. |
+| 181 | `printenv` | Print environment variables. |
+| 182 | `set` | Show/set shell variables and options. |
+| 183 | `unset` | Remove shell variables/functions. |
+| 184 | `source` / `.` | Execute a script in the current shell. |
+| 185 | `exec` | Replace the current shell process with a command. |
+| 186 | `read` | Read input into variables. |
+| 187 | `shift` | Shift positional parameters. |
+| 188 | `getopts` | Parse shell-script options. |
+| 189 | `trap` | Run actions when signals/events occur. |
+| 190 | `ulimit` | View/set shell resource limits. |
+| 191 | `exit` | Exit a shell/script with a status. |
+| 192 | `logout` | Log out of a login shell. |
+| 193 | `clear` | Clear the terminal display. |
+| 194 | `history` | Show shell command history. |
+| 195 | `alias` | Define command shortcuts. |
+| 196 | `sleep` | Pause execution. |
+| 197 | `yes` | Repeatedly output text. |
+| 198 | `fc` | List/edit/re-run previous commands. |
+| 199 | `bind` | Configure/readline key bindings in Bash. |
 
 ---
 
 # 14. Shell Scripting Basics
 
+These examples assume Bash syntax (`[[ ... ]]`, `pipefail`, arrays, and `#!/usr/bin/env bash`). They are not POSIX `sh`-portable.
+
 ## Variables
 
 ```bash
+#!/usr/bin/env bash
 name="Linux"
 echo "$name"
 ```
@@ -449,6 +515,7 @@ Prefer quoting variables unless you specifically need shell word splitting/globb
 ## Exit codes
 
 ```bash
+#!/usr/bin/env bash
 command
 echo $?
 ```
@@ -476,6 +543,7 @@ some_command "$@"
 ## Conditions
 
 ```bash
+#!/usr/bin/env bash
 if [[ -f "$file" ]]; then
     echo "File exists"
 else
@@ -486,6 +554,7 @@ fi
 ## Loops
 
 ```bash
+#!/usr/bin/env bash
 for file in *.log; do
     echo "$file"
 done
@@ -498,6 +567,7 @@ done < input.txt
 ## Functions
 
 ```bash
+#!/usr/bin/env bash
 greet() {
     printf 'Hello, %s\n' "$1"
 }
@@ -508,6 +578,7 @@ greet "world"
 ## Safer Bash defaults
 
 ```bash
+#!/usr/bin/env bash
 set -euo pipefail
 ```
 
@@ -568,12 +639,16 @@ depending on shell options.
 
 | # | Command | Description |
 |---|---|---|
-| 190 | `systemctl` | Start/stop/status/enable services. 🌍🔐 |
-| 191 | `journalctl` | Read systemd journal logs. 🌍 |
-| 192 | `systemd-analyze` | Inspect boot performance and systemd state. 🌍 |
-| 193 | `dmesg` | Read kernel ring-buffer messages. 🔐/permissions vary |
-| 194 | `logger` | Send a message to the system log. |
-| 195 | `logrotate` | Rotate/compress logs. 🌍 |
+| 200 | `systemctl` | Start/stop/status/enable services. 🌍🔐 |
+| 201 | `journalctl` | Read systemd journal logs. 🌍 |
+| 202 | `systemd-analyze` | Inspect boot performance and systemd state. 🌍 |
+| 203 | `dmesg` | Read kernel ring-buffer messages. 🔐/permissions vary |
+| 204 | `logger` | Send a message to the system log. |
+| 205 | `logrotate` | Rotate/compress logs. 🌍 |
+| 206 | `cron` | Schedule recurring jobs. 🌍 |
+| 207 | `crontab` | View/edit user cron jobs. 🌍 |
+| 208 | `hostnamectl` | Query/set hostname in systemd-based systems. 🌍 |
+| 209 | `timedatectl` | Query/set date/time and timezone in systemd-based systems. 🌍 |
 
 Examples:
 
@@ -584,6 +659,9 @@ journalctl -u nginx
 journalctl -u nginx -f
 journalctl -b
 dmesg | tail
+crontab -l
+systemctl list-timers --all
+hostnamectl
 ```
 
 Common log locations vary by distro and configuration:
@@ -599,6 +677,8 @@ Common log locations vary by distro and configuration:
 
 Do not assume every file exists on every Linux distribution; systemd journal may be the primary log source.
 
+💡 `systemd` timers are typically configured via unit files in `/etc/systemd/system/` or `/usr/lib/systemd/system/` and managed with `systemctl enable --now <timer>.service`.
+
 ---
 
 # 17. Package Managers
@@ -613,11 +693,11 @@ Do not assume every file exists on every Linux distribution; systemd journal may
 
 | # | Command | Description |
 |---|---|---|
-| 196 | `apt` | Debian/Ubuntu package management. 🌍🔐 |
-| 197 | `dnf` | Fedora/RHEL package management. 🌍🔐 |
-| 198 | `pacman` | Arch package management. 🌍🔐 |
-| 199 | `apk` | Alpine package management. 🌍🔐 |
-| 200 | `zypper` | openSUSE package management. 🌍🔐 |
+| 210 | `apt` | Debian/Ubuntu package management. 🌍🔐 |
+| 211 | `dnf` | Fedora/RHEL package management. 🌍🔐 |
+| 212 | `pacman` | Arch package management. 🌍🔐 |
+| 213 | `apk` | Alpine package management. 🌍🔐 |
+| 214 | `zypper` | openSUSE package management. 🌍🔐 |
 
 Always check the package manager appropriate to the distribution rather than assuming `apt` exists.
 
@@ -627,19 +707,23 @@ Always check the package manager appropriate to the distribution rather than ass
 
 | # | Command | Description |
 |---|---|---|
-| 201 | `uname` | Kernel/system information. |
-| 202 | `hostname` | Show/set hostname. 🔐 when changing |
-| 203 | `date` | Display/set date/time. 🔐 when changing |
-| 204 | `cal` | Display a calendar. 🌍 |
-| 205 | `lscpu` | CPU architecture/details. |
-| 206 | `lsmem` | Memory layout/availability. |
-| 207 | `lspci` | PCI hardware devices. |
-| 208 | `lsusb` | USB devices. |
-| 209 | `dmidecode` | DMI/SMBIOS hardware information. 🔐 |
-| 210 | `inxi` | Broad system information. 🌍 |
-| 211 | `lsmod` | Loaded kernel modules. |
-| 212 | `modprobe` | Load/remove kernel modules. 🔐 |
-| 213 | `rmmod` | Remove a kernel module. 🔐 |
+| 215 | `uname` | Kernel/system information. |
+| 216 | `hostname` | Show/set hostname. 🔐 when changing |
+| 217 | `date` | Display/set date/time. 🔐 when changing |
+| 218 | `cal` | Display a calendar. 🌍 |
+| 219 | `lscpu` | CPU architecture/details. |
+| 220 | `lsmem` | Memory layout/availability. |
+| 221 | `lspci` | PCI hardware devices. |
+| 222 | `lsusb` | USB devices. |
+| 223 | `dmidecode` | DMI/SMBIOS hardware information. 🔐 |
+| 224 | `inxi` | Broad system information. 🌍 |
+| 225 | `lsmod` | Loaded kernel modules. |
+| 226 | `modprobe` | Load/remove kernel modules. 🔐 |
+| 227 | `rmmod` | Remove a kernel module. 🔐 |
+| 228 | `lsblk` | List block devices. |
+| 229 | `cat /etc/os-release` | Show OS metadata such as distro, version, and name. |
+
+Related tools: `parted`, `smartctl`, `swapon`, `lsblk`, `lvm`.
 
 ---
 
@@ -647,16 +731,23 @@ Always check the package manager appropriate to the distribution rather than ass
 
 | # | Command | Description |
 |---|---|---|
-| 214 | `ldd` | Show shared-library dependencies. |
-| 215 | `ldconfig` | Manage the shared-library cache. 🔐 |
-| 216 | `readelf` | Inspect ELF executable/object metadata. |
-| 217 | `objdump` | Inspect/disassemble object files and binaries. |
-| 218 | `strings` | Extract human-readable strings from binary data. |
-| 219 | `xxd` | Hex dump/create binary data. |
-| 220 | `hexdump` | Display binary data in hexadecimal/other formats. |
-| 221 | `od` | Octal/hex/decimal dump. |
+| 230 | `ldd` | Show shared-library dependencies. |
+| 231 | `ldconfig` | Manage the shared-library cache. 🔐 |
+| 232 | `readelf` | Inspect ELF executable/object metadata. |
+| 233 | `objdump` | Inspect/disassemble object files and binaries. |
+| 234 | `strings` | Extract human-readable strings from binary data. |
+| 235 | `xxd` | Hex dump/create binary data. |
+| 236 | `hexdump` | Display binary data in hexadecimal/other formats. |
+| 237 | `od` | Octal/hex/decimal dump. |
 
 These are particularly useful for debugging missing libraries, architecture mismatches, ELF issues, and unfamiliar binaries.
+
+⚠️ `ldd` can execute the binary it inspects. For untrusted files, prefer safer static checks such as:
+
+```bash
+readelf -d ./binary | grep NEEDED
+objdump -p ./binary | grep NEEDED
+```
 
 ---
 
@@ -664,11 +755,11 @@ These are particularly useful for debugging missing libraries, architecture mism
 
 | # | Command | Description |
 |---|---|---|
-| 222 | `sha256sum` | SHA-256 checksum. |
-| 223 | `sha512sum` | SHA-512 checksum. |
-| 224 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
-| 225 | `cksum` | CRC checksum and byte count. |
-| 226 | `sum` | Legacy checksum utility. |
+| 238 | `sha256sum` | SHA-256 checksum. |
+| 239 | `sha512sum` | SHA-512 checksum. |
+| 240 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
+| 241 | `cksum` | CRC checksum and byte count. |
+| 242 | `sum` | Legacy checksum utility. |
 
 Example:
 
@@ -684,10 +775,11 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 227 | `git` | Distributed version control. |
-| 228 | `make` | Build automation. 🌍 |
-| 229 | `shellcheck` | Static analysis for shell scripts. 🌍 |
-| 230 | `shfmt` | Format shell scripts. 🌍 |
+| 243 | `git` | Distributed version control. |
+| 244 | `make` | Build automation. 🌍 |
+| 245 | `shellcheck` | Static analysis for shell scripts. 🌍 |
+| 246 | `shfmt` | Format shell scripts. 🌍 |
+| 247 | `gpg` | Encrypt, sign, and manage keys. |
 
 ---
 
@@ -695,16 +787,16 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 231 | `tmux` | Persistent terminal sessions/panes. 🌍 |
-| 232 | `screen` | Terminal multiplexer. |
-| 233 | `entr` | Re-run commands when files change. 🌍 |
-| 234 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
-| 235 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
-| 236 | `fzf` | Interactive fuzzy finder. 🌍 |
-| 237 | `bat` | `cat` alternative with highlighting. 🌍 |
-| 238 | `zoxide` | Smarter directory jumping. 🌍 |
-| 239 | `eza` | Modern `ls` alternative. 🌍 |
-| 240 | `tldr` | Concise command examples. 🌍 |
+| 248 | `tmux` | Persistent terminal sessions/panes. 🌍 |
+| 249 | `screen` | Terminal multiplexer. |
+| 250 | `entr` | Re-run commands when files change. 🌍 |
+| 251 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
+| 252 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
+| 253 | `fzf` | Interactive fuzzy finder. 🌍 |
+| 254 | `bat` | `cat` alternative with highlighting. 🌍 |
+| 255 | `zoxide` | Smarter directory jumping. 🌍 |
+| 256 | `eza` | Modern `ls` alternative. 🌍 |
+| 257 | `tldr` | Concise command examples. 🌍 |
 
 Note: `exa` is largely superseded by `eza`; use `eza` for a current recommendation.
 
@@ -786,6 +878,14 @@ Remember that tracing/profiling can add overhead.
 tar -czf project-backup-$(date +%F).tar.gz ./project
 ```
 
+## Synchronize directories/files
+
+```bash
+rsync -av --delete ./project/ backup-host:/srv/project/
+```
+
+💡 `rsync` is ideal for backups, mirroring, and efficient updates; prefer `-n` or `--dry-run` when testing.
+
 ## Find large files
 
 ```bash
@@ -815,10 +915,12 @@ grep -RIl -- "old-text" .
 Then modify deliberately:
 
 ```bash
-grep -RIl -- "old-text" . | xargs sed -i 's/old-text/new-text/g'
+grep -RIlZ -- "old-text" . | xargs -0 -r sed -i 's/old-text/new-text/g'
 ```
 
-⚠️ Test the command on a small set or use version control/backups first. Be especially careful with filenames containing unusual characters; robust scripts should use null-delimited pipelines where appropriate.
+`-Z` / `-0` handle spaces and newlines in filenames, and `-r` prevents `xargs` from running `sed` when there are no matches.
+
+⚠️ Test the command on a small set or use version control / backups first.
 
 ## Monitor a log
 
@@ -857,12 +959,14 @@ lsof -i :8080
 kill PID
 ```
 
-Only escalate when necessary:
+Wait a few seconds and check status before escalating:
 
 ```bash
-kill -TERM PID
+ps -p PID
 kill -KILL PID
 ```
+
+`kill` sends `SIGTERM` by default; `kill -KILL` is a forced stop.
 
 ## Safely inspect an archive before extraction
 
@@ -898,6 +1002,33 @@ Before using a destructive glob, inspect it:
 ```bash
 printf '%s\n' ./*.tmp
 ```
+
+### `cp`, `mv`, and shell redirection
+
+`cp`, `mv`, `>`, and `tee` can overwrite files silently unless you guard against it.
+
+Examples:
+
+```bash
+cp -n src.txt dst.txt
+mv -n src.txt dst.txt
+cp -i src.txt dst.txt
+mv -i src.txt dst.txt
+set -o noclobber
+```
+
+Use `cp -i`, `mv -i`, `cp -n`, or `mv -n` when you want stricter overwrite protection.
+
+### `chmod -R` / `chown -R`
+
+Recursive permission and ownership changes are easy to misuse.
+
+```bash
+chmod -R 755 some-dir
+chown -R user:group some-dir
+```
+
+Prefer a scoped target and verify before running.
 
 ### `dd`
 
@@ -953,6 +1084,7 @@ extract() {
         *.tar.gz|*.tgz) tar -xzf "$1" ;;
         *.tar.bz2)      tar -xjf "$1" ;;
         *.tar.xz)       tar -xJf "$1" ;;
+        *.tar.zst|*.zst) zstd -d -c "$1" | tar -xf - ;;
         *.zip)           unzip "$1" ;;
         *)               printf 'Unknown archive: %s\n' "$1" ;;
     esac
@@ -976,13 +1108,46 @@ Useful customizations:
 
 ---
 
-# Quick Safety Summary
+# 28. Terminal Fun & Eye Candy
+
+| # | Tool | Description |
+|---|---|---|
+| 1 | `cmatrix` | Classic falling “Matrix” characters. 🌍 |
+| 2 | `neofetch` | Display system info with ASCII distro art. 🌍 |
+| 3 | `fastfetch` | Faster, modern alternative to `neofetch`. 🌍 |
+| 4 | `cowsay` | Makes an ASCII cow say something. 🌍 |
+| 5 | `cowthink` | Makes the cow think something. 🌍 |
+| 6 | `fortune` | Prints a random quote/message. 🌍 |
+| 7 | `lolcat` | Rainbow-colored terminal output. 🌍 |
+| 8 | `figlet` | Turns text into large ASCII banners. 🌍 |
+| 9 | `toilet` | Another ASCII-art text generator with effects. 🌍 |
+| 10 | `sl` | A joke command for mistyping `ls`. 🌍 |
+| 11 | `pv` | Shows progress while data flows through a pipe. 🌍 |
+| 12 | `ranger` | Keyboard-driven terminal file manager. 🌍 |
+| 13 | `nnn` | Very fast terminal file manager. 🌍 |
+| 14 | `yazi` | Modern terminal file manager. 🌍 |
+| 15 | `cava` | Terminal audio spectrum visualizer. 🌍 |
+| 16 | `pipes.sh` | Animated pipes flowing around the terminal. 🌍 |
+| 17 | `hollywood` | Simulates a ridiculous “hacker movie” terminal. 🌍 |
+| 18 | `genact` | Fake activity generator that makes your terminal look busy. 🌍 |
+| 19 | `nyancat` | Animated Nyan Cat in the terminal. 🌍 |
+| 20 | `aafire` | ASCII fire effect. 🌍 |
+| 21 | `oneko` | A little cat follows your cursor around. 🌍 |
+
+These are fun tools and can be useful for demos, screen sharing, or just making a terminal feel less intimidating.
+
+---
+
+# 29. Quick Safety Summary
 
 | Command/tool | Typical risk |
 |---|---|
 | `ls`, `pwd`, `file`, `stat`, `find` | 🟢 Usually safe |
+| `find -delete`, `find -exec rm` | 🟡/🔴 Can delete files if the target is not explicitly checked |
+| `cp`, `mv`, `>`, `tee` | 🟡 Can overwrite files unless guarded |
 | `grep`, `less`, `head`, `tail`, `jq` | 🟢 Usually safe |
-| `chmod`, `chown`, `mount`, `systemctl` | 🟡 Changes system state |
+| `chmod`, `chown`, `chmod -R`, `chown -R` | 🟡 Changes system state |
+| `mount`, `systemctl` | 🟡 Changes system state |
 | `sudo` | 🟡/🔐 Privilege escalation |
 | `kill`, `pkill`, `pkill -9` | 🟡/🔴 Process disruption |
 | `rm -rf` | 🔴 Destructive |
@@ -991,11 +1156,12 @@ Useful customizations:
 | `fdisk` / partitioning | 🔴 Can destroy partitions/data |
 | `fsck` | 🟡/🔴 Repair operations can be destructive |
 | `userdel -r` | 🔴 Removes account/home data |
+| `ldd` | 🟡 Can execute an inspected binary |
 | `apt` / `dnf` / `pacman` / `apk` / `zypper` | 🌍 Distro-specific |
 
 ---
 
-# Final Rule
+# 30. Final Rule
 
 **If you don't know what a command does, don't guess.**
 
@@ -1008,35 +1174,6 @@ man command
 
 Then inspect the target, understand the arguments, and only execute destructive operations after verifying exactly what they will affect.
 
-## Terminal Fun & Eye Candy
+---
 
-| Tool | Description |
-| --- | --- |
-| `cmatrix` | Classic falling “Matrix” characters. |
-| `neofetch` | Display system info with ASCII distro art. |
-| `fastfetch` | Faster, modern alternative to `neofetch`. |
-| `cowsay` | Makes an ASCII cow say something. |
-| `cowthink` | Makes the cow think something. |
-| `fortune` | Prints a random quote/message. |
-| `lolcat` | Rainbow-colored terminal output. |
-| `figlet` | Turns text into large ASCII banners. |
-| `toilet` | Another ASCII-art text generator with effects. |
-| `sl` | A joke command for mistyping `ls`. |
-| `yes` | Repeatedly prints text — surprisingly entertaining when combined with other tools. |
-| `pv` | Shows progress while data flows through a pipe. |
-| `watch` | Continuously reruns a command. |
-| `htop` | Interactive process monitor. |
-| `btop` | Beautiful interactive system monitor. |
-| `ncdu` | Interactive disk-usage explorer. |
-| `ranger` | Keyboard-driven terminal file manager. |
-| `nnn` | Very fast terminal file manager. |
-| `yazi` | Modern terminal file manager. |
-| `fzf` | Interactive fuzzy finder for files/history/etc. |
-| `cava` | Terminal audio spectrum visualizer. |
-| `pipes.sh` | Animated pipes flowing around the terminal. |
-| `hollywood` | Simulates a ridiculous “hacker movie” terminal. |
-| `genact` | Fake activity generator that makes your terminal look busy. |
-| `nyancat` | Animated Nyan Cat in the terminal. |
-| `aafire` | ASCII fire effect. |
-| `oneko` | A little cat follows your cursor around. |
-| `btop` + `cmatrix` | Excellent combination for a “movie hacker” terminal. |
+This file fixes the Markdown pipe issue, corrects the kill escalation guidance, moves the fun tools to their proper section, clarifies Bash-only scripting assumptions, adds missing tools and warnings, and keeps the reference consistent with the legend and safety-first style.
