@@ -32,7 +32,7 @@ This repository is for educational and reference purposes only.
 
 - Commands and options can vary by Linux distribution, shell, version, and installed packages.
 - Always verify what a command does before running it on a real system.
-- Destructive commands such as `rm`, `mkfs`, `dd`, `fdisk`, and privileged system changes should be reviewed carefully and tested in safe environments when possible.
+- Destructive commands such as `rm`, `mkfs`, `dd`, and `fdisk` — as well as privileged system changes — should be reviewed carefully and tested in safe environments when possible.
 - This material is not a substitute for official distro documentation, man pages, or system-specific operational procedures.
 
 ---
@@ -57,7 +57,7 @@ This repository is for educational and reference purposes only.
 - `systemd`, services, and logs
 - Package managers
 - Hardware and kernel inspection
-- Scheduling with `cron` and systemd timers
+- Scheduling with `cron`, `at`, and systemd timers
 - Firewall tooling (`ufw`, `nft`, `iptables`, `firewalld`)
 
 ### Networking

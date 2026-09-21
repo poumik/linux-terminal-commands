@@ -1,4 +1,4 @@
-# Linux Terminal Reference — 250+ Commands, Concepts & Recipes
+# Linux Terminal Reference — 300 Commands, Concepts & Recipes
 
 A practical Linux terminal reference for sysadmins, developers, and advanced users.
 
@@ -13,7 +13,7 @@ This file is the canonical reference. The README is intentionally shorter and li
 - 🌍 **Not universal** — distro/package-dependent.
 - 💡 **Tip** — useful shortcut or best practice.
 
-> **Before unfamiliar commands:** try `command --help`, then `man command`.
+> **Before running an unfamiliar command:** try `command --help`, then `man command`.
 > Availability and exact options can vary by distro, shell, and installed packages.
 
 ## Table of contents
@@ -102,12 +102,13 @@ type cd
 | 28 | `dirname` | Extract the directory component. |
 | 29 | `install` | Copy files while setting permissions/ownership. |
 | 30 | `mktemp` | Create a unique temporary file/directory safely. |
+| 31 | `truncate` | Resize or create a file to a specified size. |
 
 💡 Preview a glob before a destructive command:
 
 ```bash
 ls *.log
-rm -- *.log
+rm *.log
 ```
 
 ⚠️ `cp`, `mv`, `>`, and `tee` can overwrite files silently unless you guard against it. Use `cp -n`, `cp -i`, `mv -n`, `mv -i`, or `set -o noclobber` when you want explicit protection.
@@ -118,15 +119,15 @@ rm -- *.log
 
 | # | Command | Description |
 |---|---|---|
-| 31 | `cat` | Print/concatenate files. |
-| 32 | `less` | Scroll through files; search with `/pattern`. |
-| 33 | `more` | Older pager; `less` is usually preferable. |
-| 34 | `head` | Show the beginning of a file. |
-| 35 | `tail` | Show the end; `-f` follows a changing file. |
-| 36 | `nano` | Beginner-friendly terminal editor. |
-| 37 | `vim` | Powerful modal editor. |
-| 38 | `tac` | Print file lines in reverse order. |
-| 39 | `rev` | Reverse characters on each line. |
+| 32 | `cat` | Print/concatenate files. |
+| 33 | `less` | Scroll through files; search with `/pattern`. |
+| 34 | `more` | Older pager; `less` is usually preferable. |
+| 35 | `head` | Show the beginning of a file. |
+| 36 | `tail` | Show the end; `-f` follows a changing file. |
+| 37 | `nano` | Beginner-friendly terminal editor. |
+| 38 | `vim` | Powerful modal editor. |
+| 39 | `tac` | Print file lines in reverse order. |
+| 40 | `rev` | Reverse characters on each line. |
 
 ---
 
@@ -134,31 +135,33 @@ rm -- *.log
 
 | # | Command | Description |
 |---|---|---|
-| 40 | `grep` | Search text using patterns/regex. |
-| 41 | `sed` | Stream editor for substitutions, deletion, and transformation. |
-| 42 | `awk` | Pattern scanning and structured text processing. |
-| 43 | `cut` | Extract fields/columns. |
-| 44 | `tr` | Translate, squeeze, or delete characters. |
-| 45 | `sort` | Sort lines. |
-| 46 | `uniq` | Remove/report adjacent duplicate lines. |
-| 47 | `wc` | Count lines, words, bytes, and characters. |
-| 48 | `diff` | Compare files line by line. |
-| 49 | `patch` | Apply a diff/patch. |
-| 50 | `tee` | Copy stdin to stdout and a file. |
-| 51 | `xargs` | Build commands from stdin. |
-| 52 | `column` | Align tabular text. |
-| 53 | `paste` | Merge files line-by-line. |
-| 54 | `join` | Join sorted files on a common field. |
-| 55 | `comm` | Compare two sorted files. |
-| 56 | `nl` | Number lines. |
-| 57 | `fold` | Wrap long lines. |
-| 58 | `expand` | Convert tabs to spaces. |
-| 59 | `unexpand` | Convert spaces to tabs. |
-| 60 | `seq` | Generate numeric sequences. |
-| 61 | `split` | Split a file into pieces. |
-| 62 | `csplit` | Split a file at pattern/context boundaries. |
-| 63 | `jq` | Parse and transform JSON. |
-| 64 | `base64` | Encode/decode Base64 data. |
+| 41 | `grep` | Search text using patterns/regex. |
+| 42 | `sed` | Stream editor for substitutions, deletion, and transformation. |
+| 43 | `awk` | Pattern scanning and structured text processing. |
+| 44 | `cut` | Extract fields/columns. |
+| 45 | `tr` | Translate, squeeze, or delete characters. |
+| 46 | `sort` | Sort lines. |
+| 47 | `uniq` | Remove/report adjacent duplicate lines. |
+| 48 | `wc` | Count lines, words, bytes, and characters. |
+| 49 | `diff` | Compare files line by line. |
+| 50 | `patch` | Apply a diff/patch. |
+| 51 | `tee` | Copy stdin to stdout and a file. |
+| 52 | `xargs` | Build commands from stdin. |
+| 53 | `column` | Align tabular text. |
+| 54 | `paste` | Merge files line-by-line. |
+| 55 | `join` | Join sorted files on a common field. |
+| 56 | `comm` | Compare two sorted files. |
+| 57 | `nl` | Number lines. |
+| 58 | `fold` | Wrap long lines. |
+| 59 | `expand` | Convert tabs to spaces. |
+| 60 | `unexpand` | Convert spaces to tabs. |
+| 61 | `seq` | Generate numeric sequences. |
+| 62 | `split` | Split a file into pieces. |
+| 63 | `csplit` | Split a file at pattern/context boundaries. |
+| 64 | `jq` | Parse and transform JSON. |
+| 65 | `base64` | Encode/decode Base64 data. |
+| 66 | `iconv` | Convert text between character encodings. |
+| 67 | `cmp` | Compare two files byte by byte. |
 
 Useful examples:
 
@@ -166,7 +169,7 @@ Useful examples:
 grep -r --include="*.py" "function_name" .
 grep -C 5 "error" log.txt
 cut -d: -f1 /etc/passwd
-printf '%s\n' *.log | sort | uniq
+find . -maxdepth 1 -name '*.log' | sort
 jq '.users[] | .name' data.json
 ```
 
@@ -215,20 +218,20 @@ EOF
 
 | # | Command | Description |
 |---|---|---|
-| 65 | `chmod` | Change permissions. 🟡 |
-| 66 | `chown` | Change owner/group. 🔐 |
-| 67 | `chgrp` | Change group ownership. 🔐 |
-| 68 | `umask` | Control default permissions for new files. |
-| 69 | `sudo` | Execute a command with elevated/another-user privileges. 🔐 |
-| 70 | `su` | Switch user. 🔐 |
-| 71 | `groups` | Show group memberships. |
-| 72 | `id` | Show UID/GID and group information. |
-| 73 | `getfacl` | View POSIX ACLs. |
-| 74 | `setfacl` | Set POSIX ACLs. |
-| 75 | `chattr` | Change filesystem attributes such as immutable. 🔐 |
-| 76 | `lsattr` | List filesystem attributes. |
-| 77 | `passwd` | Change a user's password. |
-| 78 | `chage` | Manage password aging/expiry. |
+| 68 | `chmod` | Change permissions. 🟡 |
+| 69 | `chown` | Change owner/group. 🔐 |
+| 70 | `chgrp` | Change group ownership. 🔐 |
+| 71 | `umask` | Control default permissions for new files. |
+| 72 | `sudo` | Execute a command with elevated/another-user privileges. 🔐 |
+| 73 | `su` | Switch user. 🔐 |
+| 74 | `groups` | Show group memberships. |
+| 75 | `id` | Show UID/GID and group information. |
+| 76 | `getfacl` | View POSIX ACLs. |
+| 77 | `setfacl` | Set POSIX ACLs. |
+| 78 | `chattr` | Change filesystem attributes such as immutable. 🔐 |
+| 79 | `lsattr` | List filesystem attributes. |
+| 80 | `passwd` | Change a user's password. |
+| 81 | `chage` | Manage password aging/expiry. |
 
 ### Permission basics
 
@@ -263,16 +266,18 @@ setfacl -m u:alice:r file.txt
 
 | # | Command | Description |
 |---|---|---|
-| 79 | `whoami` | Print current effective username. |
-| 80 | `who` | Show logged-in users. |
-| 81 | `w` | Show users and what they are doing. |
-| 82 | `last` | Show login history. |
-| 83 | `useradd` | Create a user. 🔐 |
-| 84 | `usermod` | Modify a user. 🔐 |
-| 85 | `userdel` | Delete a user. 🔴🔐 |
-| 86 | `groupadd` | Create a group. 🔐 |
-| 87 | `groupdel` | Delete a group. 🔴🔐 |
-| 88 | `newgrp` | Temporarily switch effective group. |
+| 82 | `whoami` | Print current effective username. |
+| 83 | `who` | Show logged-in users. |
+| 84 | `w` | Show users and what they are doing. |
+| 85 | `last` | Show login history. |
+| 86 | `useradd` | Create a user. 🔐 |
+| 87 | `usermod` | Modify a user. 🔐 |
+| 88 | `userdel` | Delete a user. 🔴🔐 |
+| 89 | `groupadd` | Create a group. 🔐 |
+| 90 | `groupdel` | Delete a group. 🔴🔐 |
+| 91 | `newgrp` | Temporarily switch effective group. |
+| 92 | `chsh` | Change a user's login shell. 🟡 |
+| 93 | `chfn` | Change a user's GECOS/finger information. |
 
 💡 Example: add a user to an extra group while keeping existing groups:
 
@@ -290,25 +295,25 @@ sudo usermod -aG developers alice
 
 | # | Command | Description |
 |---|---|---|
-| 89 | `ps` | Snapshot of processes. |
-| 90 | `top` | Interactive process/resource monitor. |
-| 91 | `htop` | Improved interactive process monitor. 🌍 |
-| 92 | `btop` | Modern interactive resource monitor. 🌍 |
-| 93 | `pgrep` | Find PIDs by process name/pattern. |
-| 94 | `pkill` | Send signals to matching processes. 🟡 |
-| 95 | `kill` | Send a signal to a PID. 🟡 |
-| 96 | `killall` | Signal processes by name. 🟡 |
-| 97 | `pstree` | Display process parent/child relationships. |
-| 98 | `jobs` | List shell background jobs. |
-| 99 | `bg` | Resume a suspended job in background. |
-| 100 | `fg` | Bring a job to the foreground. |
-| 101 | `nohup` | Keep a process running after terminal hangup. |
-| 102 | `disown` | Remove a job from shell job control. |
-| 103 | `timeout` | Stop a command after a time limit. |
-| 104 | `nice` | Start a process with adjusted priority. |
-| 105 | `renice` | Change an existing process's priority. |
-| 106 | `wait` | Wait for background processes. |
-| 107 | `pidof` | Find PIDs by executable name. |
+| 94 | `ps` | Snapshot of processes. |
+| 95 | `top` | Interactive process/resource monitor. |
+| 96 | `htop` | Improved interactive process monitor. 🌍 |
+| 97 | `btop` | Modern interactive resource monitor. 🌍 |
+| 98 | `pgrep` | Find PIDs by process name/pattern. |
+| 99 | `pkill` | Send signals to matching processes. 🟡 |
+| 100 | `kill` | Send a signal to a PID. 🟡 |
+| 101 | `killall` | Signal processes by name. 🟡 |
+| 102 | `pstree` | Display process parent/child relationships. |
+| 103 | `jobs` | List shell background jobs. |
+| 104 | `bg` | Resume a suspended job in background. |
+| 105 | `fg` | Bring a job to the foreground. |
+| 106 | `nohup` | Keep a process running after terminal hangup. |
+| 107 | `disown` | Remove a job from shell job control. |
+| 108 | `timeout` | Stop a command after a time limit. |
+| 109 | `nice` | Start a process with adjusted priority. |
+| 110 | `renice` | Change an existing process's priority. |
+| 111 | `wait` | Wait for background processes. |
+| 112 | `pidof` | Find PIDs by executable name. |
 
 💡 Prefer graceful termination first:
 
@@ -328,21 +333,21 @@ kill -KILL PID
 
 | # | Command | Description |
 |---|---|---|
-| 108 | `uptime` | Show uptime and load average. |
-| 109 | `free` | Show RAM/swap usage. |
-| 110 | `df` | Show filesystem free space. |
-| 111 | `du` | Estimate directory/file disk usage. |
-| 112 | `vmstat` | Show memory, paging, process, and CPU statistics. |
-| 113 | `iostat` | CPU and disk I/O statistics. 🌍 |
-| 114 | `sar` | Historical system activity data. 🌍 |
-| 115 | `iotop` | Per-process disk I/O monitor. 🌍🔐 |
-| 116 | `lsof` | List open files, processes, and sockets. |
-| 117 | `fuser` | Identify processes using files/sockets. |
-| 118 | `strace` | Trace system calls/signals. |
-| 119 | `ltrace` | Trace library calls. 🌍 |
-| 120 | `perf` | Linux performance/profiling toolkit. 🌍 |
-| 121 | `watch` | Re-run a command periodically. |
-| 122 | `time` | Measure command execution time. |
+| 113 | `uptime` | Show uptime and load average. |
+| 114 | `free` | Show RAM/swap usage. |
+| 115 | `df` | Show filesystem free space. |
+| 116 | `du` | Estimate directory/file disk usage. |
+| 117 | `vmstat` | Show memory, paging, process, and CPU statistics. |
+| 118 | `iostat` | CPU and disk I/O statistics. 🌍 |
+| 119 | `sar` | Historical system activity data. 🌍 |
+| 120 | `iotop` | Per-process disk I/O monitor. 🌍🔐 |
+| 121 | `lsof` | List open files, processes, and sockets. |
+| 122 | `fuser` | Identify processes using files/sockets. |
+| 123 | `strace` | Trace system calls/signals. |
+| 124 | `ltrace` | Trace library calls. 🌍 |
+| 125 | `perf` | Linux performance/profiling toolkit. 🌍 |
+| 126 | `watch` | Re-run a command periodically. |
+| 127 | `time` | Measure command execution time. |
 
 ---
 
@@ -350,23 +355,24 @@ kill -KILL PID
 
 | # | Command | Description |
 |---|---|---|
-| 123 | `lsblk` | List block devices and partitions. |
-| 124 | `blkid` | Show filesystem UUID/type information. |
-| 125 | `findmnt` | Inspect mounted filesystems. |
-| 126 | `mount` | Mount a filesystem. 🔐 |
-| 127 | `umount` | Unmount a filesystem. 🔐 |
-| 128 | `fdisk` | Partition-table editor. 🔴🔐 |
-| 129 | `mkfs` | Create a filesystem. 🔴🔐 |
-| 130 | `fsck` | Check/repair filesystems. 🔴🔐 |
-| 131 | `e2fsck` | Check/repair ext2/3/4 filesystems. 🔴🔐 |
-| 132 | `tune2fs` | Tune ext2/3/4 filesystem parameters. 🔐 |
-| 133 | `dd` | Low-level byte-for-byte copying/conversion. 🔴🔐 |
-| 134 | `sync` | Flush filesystem buffers. |
-| 135 | `ncdu` | Interactive disk-usage browser. 🌍 |
-| 136 | `parted` | Partition disks and resize partitions. 🔴🔐 |
-| 137 | `smartctl` | Read SMART health and diagnostics for drives. 🔐 |
-| 138 | `lvm` | Manage LVM volumes, groups, and snapshots. 🟡🔐 |
-| 139 | `swapon` | Enable swap devices/files. 🔐 |
+| 128 | `lsblk` | List block devices and partitions. |
+| 129 | `blkid` | Show filesystem UUID/type information. |
+| 130 | `findmnt` | Inspect mounted filesystems. |
+| 131 | `mount` | Mount a filesystem. 🔐 |
+| 132 | `umount` | Unmount a filesystem. 🔐 |
+| 133 | `fdisk` | Partition-table editor. 🔴🔐 |
+| 134 | `mkfs` | Create a filesystem. 🔴🔐 |
+| 135 | `fsck` | Check/repair filesystems. 🔴🔐 |
+| 136 | `e2fsck` | Check/repair ext2/3/4 filesystems. 🔴🔐 |
+| 137 | `tune2fs` | Tune ext2/3/4 filesystem parameters. 🔐 |
+| 138 | `dd` | Low-level byte-for-byte copying/conversion. 🔴🔐 |
+| 139 | `sync` | Flush filesystem buffers. |
+| 140 | `ncdu` | Interactive disk-usage browser. 🌍 |
+| 141 | `parted` | Partition disks and resize partitions. 🔴🔐 |
+| 142 | `smartctl` | Read SMART health and diagnostics for drives. 🔐 |
+| 143 | `lvm` | Manage LVM volumes, groups, and snapshots. 🟡🔐 |
+| 144 | `swapon` | Enable swap devices/files. 🔐 |
+| 145 | `shred` | Overwrite a file repeatedly before deletion. 🔴 |
 
 ⚠️ `dd`, `mkfs`, partitioning tools, and filesystem repair commands can destroy data if pointed at the wrong device.
 
@@ -378,34 +384,38 @@ kill -KILL PID
 
 | # | Command | Description |
 |---|---|---|
-| 140 | `ip` | Inspect/manage interfaces, addresses, and routes. |
-| 141 | `ss` | Inspect sockets/listening ports. |
-| 142 | `ping` | Test IP connectivity with ICMP. |
-| 143 | `traceroute` | Trace network paths. 🌍 |
-| 144 | `mtr` | Interactive ping + traceroute. 🌍 |
-| 145 | `dig` | Detailed DNS queries. 🌍 |
-| 146 | `nslookup` | DNS queries. |
-| 147 | `host` | Simple DNS lookup. |
-| 148 | `curl` | Transfer/test HTTP and other protocols. |
-| 149 | `wget` | Download files non-interactively. |
-| 150 | `ssh` | Secure remote shell. |
-| 151 | `scp` | Copy files over SSH. |
-| 152 | `rsync` | Efficient remote or local file sync and transfer. 🟡 |
-| 153 | `sftp` | Interactive file transfer over SSH. |
-| 154 | `ssh-keygen` | Generate/manage SSH keys. |
-| 155 | `ssh-agent` | Cache SSH private-key credentials. |
-| 156 | `nc` | Read/write TCP/UDP connections. 🌍 |
-| 157 | `openssl` | TLS, certificates, hashes, and crypto utilities. |
-| 158 | `ethtool` | Inspect/configure Ethernet interface capabilities. 🔐🌍 |
-| 159 | `nmcli` | Manage NetworkManager from the CLI. 🌍 |
-| 160 | `resolvectl` | Inspect/test systemd-resolved DNS. 🌍 |
-| 161 | `getent` | Query NSS databases such as users, groups, and hosts. |
-| 162 | `nmap` | Network discovery and port scanning. 🌍 |
-| 163 | `tcpdump` | Capture packets on an interface. 🌍🔐 |
-| 164 | `ufw` | Manage the Uncomplicated Firewall. 🟡🌍🔐 |
-| 165 | `nft` | Manage nftables firewall rules. 🟡🌍🔐 |
-| 166 | `iptables` | Legacy packet filter firewall rules. 🟡🌍🔐 |
-| 167 | `firewall-cmd` | Manage firewalld rules. 🟡🌍🔐 |
+| 146 | `ip` | Inspect/manage interfaces, addresses, and routes. |
+| 147 | `ss` | Inspect sockets/listening ports. |
+| 148 | `ping` | Test IP connectivity with ICMP. |
+| 149 | `traceroute` | Trace network paths. 🌍 |
+| 150 | `mtr` | Interactive ping + traceroute. 🌍 |
+| 151 | `dig` | Detailed DNS queries. 🌍 |
+| 152 | `nslookup` | DNS queries. 🌍 |
+| 153 | `host` | Simple DNS lookup. 🌍 |
+| 154 | `curl` | Transfer/test HTTP and other protocols. |
+| 155 | `wget` | Download files non-interactively. |
+| 156 | `ssh` | Secure remote shell. |
+| 157 | `scp` | Copy files over SSH. |
+| 158 | `rsync` | Efficient remote or local file sync and transfer. 🟡 |
+| 159 | `sftp` | Interactive file transfer over SSH. |
+| 160 | `ssh-keygen` | Generate/manage SSH keys. |
+| 161 | `ssh-agent` | Cache SSH private-key credentials. |
+| 162 | `nc` | Read/write TCP/UDP connections. 🌍 |
+| 163 | `openssl` | TLS, certificates, hashes, and crypto utilities. |
+| 164 | `ethtool` | Inspect/configure Ethernet interface capabilities. 🔐🌍 |
+| 165 | `nmcli` | Manage NetworkManager from the CLI. 🌍 |
+| 166 | `resolvectl` | Inspect/test systemd-resolved DNS. 🌍 |
+| 167 | `getent` | Query NSS databases such as users, groups, and hosts. |
+| 168 | `nmap` | Network discovery and port scanning. 🌍 |
+| 169 | `tcpdump` | Capture packets on an interface. 🌍🔐 |
+| 170 | `ufw` | Manage the Uncomplicated Firewall. 🟡🌍🔐 |
+| 171 | `nft` | Manage nftables firewall rules. 🟡🌍🔐 |
+| 172 | `iptables` | Legacy packet filter firewall rules. 🟡🌍🔐 |
+| 173 | `firewall-cmd` | Manage firewalld rules. 🟡🌍🔐 |
+| 174 | `whois` | Look up domain/IP registration information. 🌍 |
+| 175 | `iftop` | Per-connection network bandwidth monitor. 🌍🔐 |
+| 176 | `nethogs` | Per-process network bandwidth monitor. 🌍🔐 |
+| 177 | `lftp` | Scriptable FTP/HTTP/SFTP client. 🌍 |
 
 Examples:
 
@@ -420,7 +430,7 @@ lsof -i :8080
 
 💡 `netstat` and `ifconfig` are legacy; prefer `ss`, `ip`, and `ip addr` / `ip route`.
 
-⚠️ Only scan networks, hosts, or traffic you are authorised to test or capture.
+⚠️ Only scan networks, hosts, or traffic you are authorized to test or capture.
 
 ⚠️ Firewall changes (`ufw`, `nft`, `iptables`, `firewall-cmd`) can lock you out of a remote machine. Allow SSH before enabling default-deny rules, and keep a second session open while testing.
 
@@ -430,15 +440,18 @@ lsof -i :8080
 
 | # | Command | Description |
 |---|---|---|
-| 168 | `tar` | Create/list/extract tar archives. |
-| 169 | `gzip` | Compress/decompress gzip data. |
-| 170 | `gunzip` | Decompress gzip files. |
-| 171 | `bzip2` | Compress/decompress bzip2 data. |
-| 172 | `xz` | High-ratio compression. |
-| 173 | `zstd` | Fast modern compression. 🌍 |
-| 174 | `zip` | Create ZIP archives. |
-| 175 | `unzip` | Extract/list ZIP archives. |
-| 176 | `7z` | 7-Zip archive utility. 🌍 |
+| 178 | `tar` | Create/list/extract tar archives. |
+| 179 | `gzip` | Compress/decompress gzip data. |
+| 180 | `gunzip` | Decompress gzip files. |
+| 181 | `bzip2` | Compress/decompress bzip2 data. |
+| 182 | `xz` | High-ratio compression. |
+| 183 | `zstd` | Fast modern compression. 🌍 |
+| 184 | `zip` | Create ZIP archives. |
+| 185 | `unzip` | Extract/list ZIP archives. |
+| 186 | `7z` | 7-Zip archive utility. 🌍 |
+| 187 | `zcat` | Read gzip-compressed files. |
+| 188 | `zgrep` | Search inside compressed files. |
+| 189 | `zless` | Page through compressed files. |
 
 Useful `tar` patterns:
 
@@ -468,29 +481,33 @@ tar -czf backup.tar.gz ./project
 
 | # | Command | Description |
 |---|---|---|
-| 177 | `echo` | Print text/variables. |
-| 178 | `printf` | Predictable formatted output; preferred over `echo` in many scripts. |
-| 179 | `export` | Export environment variables to child processes. |
-| 180 | `env` | Display/run commands with environment settings. |
-| 181 | `printenv` | Print environment variables. |
-| 182 | `set` | Show/set shell variables and options. |
-| 183 | `unset` | Remove shell variables/functions. |
-| 184 | `source` / `.` | Execute a script in the current shell. |
-| 185 | `exec` | Replace the current shell process with a command. |
-| 186 | `read` | Read input into variables. |
-| 187 | `shift` | Shift positional parameters. |
-| 188 | `getopts` | Parse shell-script options. |
-| 189 | `trap` | Run actions when signals/events occur. |
-| 190 | `ulimit` | View/set shell resource limits. |
-| 191 | `exit` | Exit a shell/script with a status. |
-| 192 | `logout` | Log out of a login shell. |
-| 193 | `clear` | Clear the terminal display. |
-| 194 | `history` | Show shell command history. |
-| 195 | `alias` | Define command shortcuts. |
-| 196 | `sleep` | Pause execution. |
-| 197 | `yes` | Repeatedly output text. |
-| 198 | `fc` | List/edit/re-run previous commands. |
-| 199 | `bind` | Configure/readline key bindings in Bash. |
+| 190 | `echo` | Print text/variables. |
+| 191 | `printf` | Predictable formatted output; preferred over `echo` in many scripts. |
+| 192 | `export` | Export environment variables to child processes. |
+| 193 | `env` | Display/run commands with environment settings. |
+| 194 | `printenv` | Print environment variables. |
+| 195 | `set` | Show/set shell variables and options. |
+| 196 | `unset` | Remove shell variables/functions. |
+| 197 | `source` / `.` | Execute a script in the current shell. |
+| 198 | `exec` | Replace the current shell process with a command. |
+| 199 | `read` | Read input into variables. |
+| 200 | `shift` | Shift positional parameters. |
+| 201 | `getopts` | Parse shell-script options. |
+| 202 | `trap` | Run actions when signals/events occur. |
+| 203 | `ulimit` | View/set shell resource limits. |
+| 204 | `exit` | Exit a shell/script with a status. |
+| 205 | `logout` | Log out of a login shell. |
+| 206 | `clear` | Clear the terminal display. |
+| 207 | `history` | Show shell command history. |
+| 208 | `alias` | Define command shortcuts. |
+| 209 | `sleep` | Pause execution. |
+| 210 | `yes` | Repeatedly output text. |
+| 211 | `fc` | List/edit/re-run previous commands. |
+| 212 | `bind` | Configure/readline key bindings in Bash. |
+| 213 | `test` / `[` | Evaluate conditional expressions. |
+| 214 | `tput` | Query terminal capabilities. |
+| 215 | `bc` | Arbitrary-precision calculator language. |
+| 216 | `script` | Record a terminal session to a file. |
 
 ---
 
@@ -586,7 +603,7 @@ greet "world"
 set -euo pipefail
 ```
 
-Understand what each option does before applying it blindly: `-e` has important edge cases, while `-u` can expose unset-variable assumptions and `pipefail` changes pipeline status behavior.
+Understand what each option does before applying it blindly: `-e` has important edge cases, while `-u` can expose unset-variable assumptions, and `pipefail` changes pipeline status behavior.
 
 ---
 
@@ -643,16 +660,19 @@ depending on shell options.
 
 | # | Command | Description |
 |---|---|---|
-| 200 | `systemctl` | Start/stop/status/enable services. 🌍🔐 |
-| 201 | `journalctl` | Read systemd journal logs. 🌍 |
-| 202 | `systemd-analyze` | Inspect boot performance and systemd state. 🌍 |
-| 203 | `dmesg` | Read kernel ring-buffer messages. 🔐 (access may be restricted) |
-| 204 | `logger` | Send a message to the system log. |
-| 205 | `logrotate` | Rotate/compress logs. 🌍 |
-| 206 | `cron` | Schedule recurring jobs. 🌍 |
-| 207 | `crontab` | View/edit user cron jobs. 🟡🌍 |
-| 208 | `hostnamectl` | Query/set hostname in systemd-based systems. 🌍 |
-| 209 | `timedatectl` | Query/set date/time and timezone in systemd-based systems. 🌍 |
+| 217 | `systemctl` | Start/stop/status/enable services. 🌍🔐 |
+| 218 | `journalctl` | Read systemd journal logs. 🌍 |
+| 219 | `systemd-analyze` | Inspect boot performance and systemd state. 🌍 |
+| 220 | `dmesg` | Read kernel ring-buffer messages. 🔐 (access may be restricted) |
+| 221 | `logger` | Send a message to the system log. |
+| 222 | `logrotate` | Rotate/compress logs. 🌍 |
+| 223 | `cron` | Schedule recurring jobs. 🌍 |
+| 224 | `crontab` | View/edit user cron jobs. 🟡🌍 |
+| 225 | `hostnamectl` | Query/set hostname in systemd-based systems. 🌍 |
+| 226 | `timedatectl` | Query/set date/time and timezone in systemd-based systems. 🌍 |
+| 227 | `loginctl` | Inspect/manage logins, sessions, and seats. 🌍 |
+| 228 | `at` | Schedule a one-time job for later. 🌍 |
+| 229 | `batch` | Run commands when system load permits. 🌍 |
 
 Examples:
 
@@ -699,11 +719,11 @@ Do not assume every file exists on every Linux distribution; systemd journal may
 
 | # | Command | Description |
 |---|---|---|
-| 210 | `apt` | Debian/Ubuntu package management. 🌍🔐 |
-| 211 | `dnf` | Fedora/RHEL package management. 🌍🔐 |
-| 212 | `pacman` | Arch package management. 🌍🔐 |
-| 213 | `apk` | Alpine package management. 🌍🔐 |
-| 214 | `zypper` | openSUSE package management. 🌍🔐 |
+| 230 | `apt` | Debian/Ubuntu package management. 🌍🔐 |
+| 231 | `dnf` | Fedora/RHEL package management. 🌍🔐 |
+| 232 | `pacman` | Arch package management. 🌍🔐 |
+| 233 | `apk` | Alpine package management. 🌍🔐 |
+| 234 | `zypper` | openSUSE package management. 🌍🔐 |
 
 Always check the package manager appropriate to the distribution rather than assuming `apt` exists.
 
@@ -713,19 +733,20 @@ Always check the package manager appropriate to the distribution rather than ass
 
 | # | Command | Description |
 |---|---|---|
-| 215 | `uname` | Kernel/system information. |
-| 216 | `hostname` | Show/set hostname. 🔐 when changing |
-| 217 | `date` | Display/set date/time. 🔐 when changing |
-| 218 | `cal` | Display a calendar. 🌍 |
-| 219 | `lscpu` | CPU architecture/details. |
-| 220 | `lsmem` | Memory layout/availability. |
-| 221 | `lspci` | PCI hardware devices. |
-| 222 | `lsusb` | USB devices. |
-| 223 | `dmidecode` | DMI/SMBIOS hardware information. 🔐 |
-| 224 | `inxi` | Broad system information. 🌍 |
-| 225 | `lsmod` | Loaded kernel modules. |
-| 226 | `modprobe` | Load/remove kernel modules. 🔐 |
-| 227 | `rmmod` | Remove a kernel module. 🔐 |
+| 235 | `uname` | Kernel/system information. |
+| 236 | `hostname` | Show/set hostname. 🔐 when changing |
+| 237 | `date` | Display/set date/time. 🔐 when changing |
+| 238 | `cal` | Display a calendar. |
+| 239 | `lscpu` | CPU architecture/details. |
+| 240 | `lsmem` | Memory layout/availability. |
+| 241 | `lspci` | PCI hardware devices. |
+| 242 | `lsusb` | USB devices. |
+| 243 | `dmidecode` | DMI/SMBIOS hardware information. 🔐 |
+| 244 | `inxi` | Broad system information. 🌍 |
+| 245 | `lsmod` | Loaded kernel modules. |
+| 246 | `modprobe` | Load/remove kernel modules. 🔐 |
+| 247 | `rmmod` | Remove a kernel module. 🔐 |
+| 248 | `xrandr` | Query/configure display outputs and resolutions. 🌍 |
 
 💡 To inspect OS identity and version metadata:
 
@@ -739,14 +760,15 @@ cat /etc/os-release
 
 | # | Command | Description |
 |---|---|---|
-| 228 | `ldd` | Show shared-library dependencies. |
-| 229 | `ldconfig` | Manage the shared-library cache. 🔐 |
-| 230 | `readelf` | Inspect ELF executable/object metadata. |
-| 231 | `objdump` | Inspect/disassemble object files and binaries. |
-| 232 | `strings` | Extract human-readable strings from binary data. |
-| 233 | `xxd` | Hex dump/create binary data. |
-| 234 | `hexdump` | Display binary data in hexadecimal/other formats. |
-| 235 | `od` | Octal/hex/decimal dump. |
+| 249 | `ldd` | Show shared-library dependencies. |
+| 250 | `ldconfig` | Manage the shared-library cache. 🔐 |
+| 251 | `readelf` | Inspect ELF executable/object metadata. |
+| 252 | `objdump` | Inspect/disassemble object files and binaries. |
+| 253 | `strings` | Extract human-readable strings from binary data. |
+| 254 | `xxd` | Hex dump/create binary data. |
+| 255 | `hexdump` | Display binary data in hexadecimal/other formats. |
+| 256 | `od` | Octal/hex/decimal dump. |
+| 257 | `nm` | List symbols from object files and binaries. |
 
 These are particularly useful for debugging missing libraries, architecture mismatches, ELF issues, and unfamiliar binaries.
 
@@ -763,12 +785,12 @@ objdump -p ./binary | grep NEEDED
 
 | # | Command | Description |
 |---|---|---|
-| 236 | `sha256sum` | SHA-256 checksum. |
-| 237 | `sha512sum` | SHA-512 checksum. |
-| 238 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
-| 239 | `cksum` | CRC checksum and byte count. |
-| 240 | `sum` | Legacy checksum utility. |
-| 241 | `gpg` | Sign, verify, encrypt, and manage keys. |
+| 258 | `sha256sum` | SHA-256 checksum. |
+| 259 | `sha512sum` | SHA-512 checksum. |
+| 260 | `md5sum` | MD5 checksum; unsuitable for security-sensitive integrity/authentication. |
+| 261 | `cksum` | CRC checksum and byte count. |
+| 262 | `sum` | Legacy checksum utility. |
+| 263 | `gpg` | Sign, verify, encrypt, and manage keys. |
 
 Example:
 
@@ -784,10 +806,12 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 242 | `git` | Distributed version control. |
-| 243 | `make` | Build automation. 🌍 |
-| 244 | `shellcheck` | Static analysis for shell scripts. 🌍 |
-| 245 | `shfmt` | Format shell scripts. 🌍 |
+| 264 | `git` | Distributed version control. |
+| 265 | `make` | Build automation. 🌍 |
+| 266 | `shellcheck` | Static analysis for shell scripts. 🌍 |
+| 267 | `shfmt` | Format shell scripts. 🌍 |
+| 268 | `gdb` | GNU debugger for compiled programs. 🌍 |
+| 269 | `valgrind` | Detect memory errors and leaks. 🌍 |
 
 ---
 
@@ -795,16 +819,16 @@ Compare the result with a trusted published checksum.
 
 | # | Command | Description |
 |---|---|---|
-| 246 | `tmux` | Persistent terminal sessions/panes. 🌍 |
-| 247 | `screen` | Terminal multiplexer. |
-| 248 | `entr` | Re-run commands when files change. 🌍 |
-| 249 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
-| 250 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
-| 251 | `fzf` | Interactive fuzzy finder. 🌍 |
-| 252 | `bat` | `cat` alternative with highlighting. 🌍 |
-| 253 | `zoxide` | Smarter directory jumping. 🌍 |
-| 254 | `eza` | Modern `ls` alternative. 🌍 |
-| 255 | `tldr` | Concise command examples. 🌍 |
+| 270 | `tmux` | Persistent terminal sessions/panes. 🌍 |
+| 271 | `screen` | Terminal multiplexer. |
+| 272 | `entr` | Re-run commands when files change. 🌍 |
+| 273 | `rg` / `ripgrep` | Faster recursive text search; respects `.gitignore` by default. 🌍 |
+| 274 | `fd` | User-friendly alternative to many `find` workflows. 🌍 |
+| 275 | `fzf` | Interactive fuzzy finder. 🌍 |
+| 276 | `bat` | `cat` alternative with highlighting. 🌍 |
+| 277 | `zoxide` | Smarter directory jumping. 🌍 |
+| 278 | `eza` | Modern `ls` alternative. 🌍 |
+| 279 | `tldr` | Concise command examples. 🌍 |
 
 Note: `exa` is largely superseded by `eza`; use `eza` for a current recommendation.
 
@@ -1105,7 +1129,7 @@ extract() {
 }
 ```
 
-💡 Avoid relying on aliases for safety-critical behavior: aliases can disappear in scripts, `sudo`, or other machines.
+💡 Avoid relying on aliases for safety-critical behavior: aliases can disappear in scripts, under `sudo`, or on other machines.
 
 ---
 
@@ -1126,27 +1150,27 @@ Useful customizations:
 
 | # | Tool | Description |
 |---|---|---|
-| 256 | `cmatrix` | Classic falling “Matrix” characters. 🌍 |
-| 257 | `neofetch` | Display system info with ASCII distro art. 🌍 |
-| 258 | `fastfetch` | Faster, modern alternative to `neofetch`. 🌍 |
-| 259 | `cowsay` | Makes an ASCII cow say something. 🌍 |
-| 260 | `cowthink` | Makes the cow think something. 🌍 |
-| 261 | `fortune` | Prints a random quote/message. 🌍 |
-| 262 | `lolcat` | Rainbow-colored terminal output. 🌍 |
-| 263 | `figlet` | Turns text into large ASCII banners. 🌍 |
-| 264 | `toilet` | Another ASCII-art text generator with effects. 🌍 |
-| 265 | `sl` | A joke command for mistyping `ls`. 🌍 |
-| 266 | `pv` | Shows progress while data flows through a pipe. 🌍 |
-| 267 | `ranger` | Keyboard-driven terminal file manager. 🌍 |
-| 268 | `nnn` | Very fast terminal file manager. 🌍 |
-| 269 | `yazi` | Modern terminal file manager. 🌍 |
-| 270 | `cava` | Terminal audio spectrum visualizer. 🌍 |
-| 271 | `pipes.sh` | Animated pipes flowing around the terminal. 🌍 |
-| 272 | `hollywood` | Simulates a ridiculous “hacker movie” terminal. 🌍 |
-| 273 | `genact` | Fake activity generator that makes your terminal look busy. 🌍 |
-| 274 | `nyancat` | Animated Nyan Cat in the terminal. 🌍 |
-| 275 | `aafire` | ASCII fire effect. 🌍 |
-| 276 | `oneko` | A little cat follows your cursor around. 🌍 |
+| 280 | `cmatrix` | Classic falling “Matrix” characters. 🌍 |
+| 281 | `neofetch` | Display system info with ASCII distro art. 🌍 |
+| 282 | `fastfetch` | Faster, modern alternative to `neofetch`. 🌍 |
+| 283 | `cowsay` | Makes an ASCII cow say something. 🌍 |
+| 284 | `cowthink` | Makes the cow think something. 🌍 |
+| 285 | `fortune` | Prints a random quote/message. 🌍 |
+| 286 | `lolcat` | Rainbow-colored terminal output. 🌍 |
+| 287 | `figlet` | Turns text into large ASCII banners. 🌍 |
+| 288 | `toilet` | Another ASCII-art text generator with effects. 🌍 |
+| 289 | `sl` | A joke command for mistyping `ls`. 🌍 |
+| 290 | `pv` | Shows progress while data flows through a pipe. 🌍 |
+| 291 | `ranger` | Keyboard-driven terminal file manager. 🌍 |
+| 292 | `nnn` | Very fast terminal file manager. 🌍 |
+| 293 | `yazi` | Modern terminal file manager. 🌍 |
+| 294 | `cava` | Terminal audio spectrum visualizer. 🌍 |
+| 295 | `pipes.sh` | Animated pipes flowing around the terminal. 🌍 |
+| 296 | `hollywood` | Simulates a ridiculous “hacker movie” terminal. 🌍 |
+| 297 | `genact` | Fake activity generator that makes your terminal look busy. 🌍 |
+| 298 | `nyancat` | Animated Nyan Cat in the terminal. 🌍 |
+| 299 | `aafire` | ASCII fire effect. 🌍 |
+| 300 | `oneko` | A little cat follows your cursor around. 🌍 |
 
 These are fun tools and can be useful for demos, screen sharing, or just making a terminal feel less intimidating.
 
