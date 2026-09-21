@@ -1,4 +1,4 @@
-# Linux Terminal Reference — 300 Commands, Concepts & Recipes
+# Linux Terminal Reference — 300+ Commands, Concepts & Recipes
 
 A practical Linux terminal reference for sysadmins, developers, and advanced users.
 
@@ -102,16 +102,16 @@ type cd
 | 28 | `dirname` | Extract the directory component. |
 | 29 | `install` | Copy files while setting permissions/ownership. |
 | 30 | `mktemp` | Create a unique temporary file/directory safely. |
-| 31 | `truncate` | Resize or create a file to a specified size. |
+| 31 | `truncate` | Resize or create a file to a specified size; shrinking discards data. 🔴 |
 
 💡 Preview a glob before a destructive command:
 
 ```bash
-ls *.log
-rm *.log
+printf '%s\n' ./*.log
+rm -- ./*.log
 ```
 
-⚠️ `cp`, `mv`, `>`, and `tee` can overwrite files silently unless you guard against it. Use `cp -n`, `cp -i`, `mv -n`, `mv -i`, or `set -o noclobber` when you want explicit protection.
+⚠️ `cp`, `mv`, `>`, and `tee` can overwrite files silently unless you guard against it. Use `cp -n`, `cp -i`, `mv -n`, `mv -i`, or `set -o noclobber` when you want explicit protection. `truncate -s 0 file` also discards a file's contents immediately.
 
 ---
 
@@ -277,7 +277,7 @@ setfacl -m u:alice:r file.txt
 | 90 | `groupdel` | Delete a group. 🔴🔐 |
 | 91 | `newgrp` | Temporarily switch effective group. |
 | 92 | `chsh` | Change a user's login shell. 🟡 |
-| 93 | `chfn` | Change a user's GECOS/finger information. |
+| 93 | `chfn` | Change a user's GECOS/finger information. 🟡 |
 
 💡 Example: add a user to an extra group while keeping existing groups:
 
@@ -375,6 +375,8 @@ kill -KILL PID
 | 145 | `shred` | Overwrite a file repeatedly before deletion. 🔴 |
 
 ⚠️ `dd`, `mkfs`, partitioning tools, and filesystem repair commands can destroy data if pointed at the wrong device.
+
+⚠️ `shred` is not reliable for every filesystem or storage device, especially SSDs and copy-on-write filesystems. Full-disk encryption and device-specific secure-erase tools are often more appropriate.
 
 💡 Read-only LVM inspection tools such as `pvs`, `vgs`, and `lvs` are usually safe. Create/remove operations such as `lvcreate`, `lvremove`, `vgremove`, and `pvremove` are destructive and should be treated with caution.
 
@@ -507,7 +509,9 @@ tar -czf backup.tar.gz ./project
 | 213 | `test` / `[` | Evaluate conditional expressions. |
 | 214 | `tput` | Query terminal capabilities. |
 | 215 | `bc` | Arbitrary-precision calculator language. |
-| 216 | `script` | Record a terminal session to a file. |
+| 216 | `script` | Record a terminal session to a file. 🟡 |
+
+⚠️ `script` logs everything displayed in the session, including any tokens, keys, or passwords shown on screen. Do not share the log without reviewing it.
 
 ---
 
@@ -686,7 +690,13 @@ dmesg | tail
 crontab -l
 systemctl list-timers --all
 hostnamectl
+
+at now + 5 minutes -f backup.sh
+atq        # list pending at jobs
+atrm 3     # remove job number 3
 ```
+
+⚠️ `at` and `batch` need the `atd` service to be running (check with `systemctl status atd`). `atrm` deletes a scheduled job without confirmation.
 
 ⚠️ `crontab -r` removes all scheduled jobs for the current user immediately. Prefer `crontab -ri` if you want an interactive confirmation prompt.
 
@@ -746,7 +756,7 @@ Always check the package manager appropriate to the distribution rather than ass
 | 245 | `lsmod` | Loaded kernel modules. |
 | 246 | `modprobe` | Load/remove kernel modules. 🔐 |
 | 247 | `rmmod` | Remove a kernel module. 🔐 |
-| 248 | `xrandr` | Query/configure display outputs and resolutions. 🌍 |
+| 248 | `xrandr` | Query/configure display outputs and resolutions (X11 only; Wayland uses compositor-specific tools). 🌍 |
 
 💡 To inspect OS identity and version metadata:
 
@@ -1194,6 +1204,7 @@ These are fun tools and can be useful for demos, screen sharing, or just making 
 | `fdisk` / partitioning | 🔴 Can destroy partitions/data |
 | `fsck` | 🟡/🔴 Repair operations can be destructive |
 | `userdel -r` | 🔴 Removes account/home data |
+| `truncate`, `shred` | 🔴 Discards or overwrites file contents; `shred` is unreliable on SSDs and copy-on-write filesystems |
 | `rsync --delete` | 🟡/🔴 Deletes destination files missing from the source; preview with `-n` first |
 | `ufw`, `nft`, `iptables`, `firewall-cmd` | 🟡 Can block your own SSH session on remote machines |
 | `crontab -r` | 🔴 Removes all of a user's scheduled jobs immediately |
